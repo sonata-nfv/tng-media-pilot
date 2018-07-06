@@ -23,9 +23,9 @@
 "use strict";
 
 var kTwitter = require('twitter');
-const kTwitterConsumerKey = 'PmDsgj3ORwTX7TWjEp1aUcUpr';
+const kTwitterConsumerKey = '';
 const kTwitterConsumerSecret =
-  'YkKjnVRzsYwMnqunlco0g8IXbHd5NK0EQm66jj289QJf9wh7mq';
+  '';
 
 module.exports = class TwitterIdentity
 {
