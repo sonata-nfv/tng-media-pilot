@@ -33,8 +33,8 @@ var OAuth = require('oauth').OAuth
   , kOAuth = new OAuth(
     "https://api.twitter.com/oauth/request_token",
     "https://api.twitter.com/oauth/access_token",
-    "PmDsgj3ORwTX7TWjEp1aUcUpr",
-    "YkKjnVRzsYwMnqunlco0g8IXbHd5NK0EQm66jj289QJf9wh7mq",
+    "Access",
+    "Access",
     "1.0",
     "oob",
     "HMAC-SHA1"
