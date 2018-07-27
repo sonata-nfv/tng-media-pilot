@@ -1,5 +1,3 @@
 #!/bin/sh
 
-if inotifywait -t 0 -m -e close_write /opt/nginx/nginx.conf; then
-	/opt/nginx/sbin/nginx -s reload
-fi
+while inotifywait -e close_write /opt/nginx/nginx.conf; do /opt/nginx/sbin/nginx -s reload; done
