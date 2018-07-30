@@ -182,8 +182,8 @@ def connect_stream():
     with open("/opt/nginx/nginx.conf", "r") as myfile:
         data = myfile.readlines()
         # index = data.index('            #-Insert Push here-\n')
-        index = data.index('          '+stream_app+'{')
-        data.insert(index + 2, push_url)
+        index = data.index('        application '+stream_app+' {\n')
+        data.insert(index + 4, push_url)
 
         data_str = ''.join(data)
 
