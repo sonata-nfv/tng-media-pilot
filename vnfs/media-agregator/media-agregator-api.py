@@ -12,6 +12,7 @@ TEMPLATE_VARIABLE_CLOSING_TAG = '___TEMPLATE_VARIABLE_CLOSING_TAG___'
 
 app = Flask(__name__)
 
+
 """Additional functions for formatting the nginx.conf"""
 
 def strip_line(single_line):
@@ -176,12 +177,13 @@ def connect_stream():
     stream_app = input_json['stream_app']
     stream_key = input_json['stream_key']
 
-    push_url = "push rtmp://10.100.16.56:1935/stream/"+stream_key+";" #TODO: Change the harcoded url to the real server
+    push_url = "push rtmp://10.100.16.56:1935/stream/"+stream_key+";\n" #TODO: Change the harcoded url to the real server
 
     with open("/opt/nginx/nginx.conf", "r") as myfile:
         data = myfile.readlines()
-        index = data.index('            #-Insert Push here-\n')
-        data.insert(index + 1, push_url)
+        # index = data.index('            #-Insert Push here-\n')
+        index = data.index('          '+stream_app+'{')
+        data.insert(index + 2, push_url)
 
         data_str = ''.join(data)
 
@@ -191,8 +193,6 @@ def connect_stream():
     format_config_file("/opt/nginx/nginx.conf")
 
     return 'OK'
-
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
