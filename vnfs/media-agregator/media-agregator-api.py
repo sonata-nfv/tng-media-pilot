@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from flask import Flask, request
+from flask import Flask, request, Response
 
 import codecs
 import re
