@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from flask import Flask, request
+from flask import Flask, request, Response, jsonify
 
 import codecs
 import re
@@ -165,7 +165,7 @@ def connect_camera():
 
     format_config_file("/opt/nginx/nginx.conf")
 
-    return 'OK'
+    return Response(None, status=200, content_type='application/json')
 
 
 """This function adds a push statement in a specific app"""
@@ -180,8 +180,8 @@ def connect_stream():
 
     with open("/opt/nginx/nginx.conf", "r") as myfile:
         data = myfile.readlines()
-        index = data.index('            #-Insert Push here-\n')
-        data.insert(index + 1, push_url)
+        index = data.index('        application ' + stream_app + ' {\n')
+        data.insert(index + 4, push_url)
 
         data_str = ''.join(data)
 
@@ -190,7 +190,7 @@ def connect_stream():
 
     format_config_file("/opt/nginx/nginx.conf")
 
-    return 'OK'
+    return Response(None, status=200, mimetype='application/json')
 
 
 
