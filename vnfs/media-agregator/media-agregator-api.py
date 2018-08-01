@@ -32,7 +32,7 @@
 ## acknowledge the contributions of their colleagues of the 5GTANGO
 ## partner consortium (www.5gtango.eu).
 
-from flask import Flask, request, Response
+from flask import Flask, request, Response, json, jsonify
 
 import codecs
 import re
@@ -185,22 +185,30 @@ def connect_camera():
                                               "#-Insert Push here-\n" \
                                               "}\n"
 
-    with open("/opt/nginx/nginx.conf", "r") as myfile:
+    #with open("/opt/nginx/nginx.conf", "r") as myfile:
+    with open("nginx.conf", "r") as myfile:
         data = myfile.readlines()
         index = data.index('        #-Insert Application here-\n')
         data.insert(index + 1, code_block)
 
         data_str = ''.join(data)
 
-        with open("/opt/nginx/nginx.conf", "w") as output:
+        #with open("/opt/nginx/nginx.conf", "w") as output:
+        with open("nginx.conf", "w") as output:
             output.write(data_str)
 
-    format_config_file("/opt/nginx/nginx.conf")
+    #format_config_file("/opt/nginx/nginx.conf")
+    format_config_file("nginx.conf")
 
-    return Response(None, status=200, content_type='application/json')
+    response = {}
+    response["code"] = 200
+    response["type"] = "?"
+    response["message"] = "TODO"
+
+    return json.dumps(response, sort_keys=False)
 
 
-"""This function adds a push statement in a specific app"""
+"""This function adds a push statement in the specific app"""
 @app.route("/connectStream", methods=["PUT"])
 def connect_stream():
     input_json = request.get_json()
@@ -210,22 +218,29 @@ def connect_stream():
 
     push_url = "push rtmp://10.100.16.56:1935/stream/"+stream_key+";" #TODO: Change the harcoded url to the real server
 
-    with open("/opt/nginx/nginx.conf", "r") as myfile:
+    #with open("/opt/nginx/nginx.conf", "r") as myfile:
+    with open("nginx.conf", "r") as myfile:
         data = myfile.readlines()
         index = data.index('        application ' + stream_app + ' {\n')
         data.insert(index + 4, push_url)
 
         data_str = ''.join(data)
 
-        with open("/opt/nginx/nginx.conf", "w") as output:
+        #with open("/opt/nginx/nginx.conf", "w") as output:
+        with open("nginx.conf", "w") as output:
             output.write(data_str)
 
-    format_config_file("/opt/nginx/nginx.conf")
+    #format_config_file("/opt/nginx/nginx.conf")
+    format_config_file("nginx.conf")
 
-    return Response(None, status=200, mimetype='application/json')
+    response = {}
+    response["code"] = 200
+    response["type"] = "?"
+    response["message"] = "http://10.100.16.56/live/"+stream_key+".m3u8"
+
+    return json.dumps(response, sort_keys= False)
 
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
-    #app.run(debug=True)
