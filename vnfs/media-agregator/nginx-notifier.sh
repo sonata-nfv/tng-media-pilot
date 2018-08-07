@@ -1,3 +1,3 @@
 #!/bin/sh
 
-while inotifywait -e close_write /opt/nginx/nginx.conf; do /opt/nginx/sbin/nginx -s reload; done
+while inotifywait -e close_write /var/lib/docker/volumes/my-vol/_data/nginx/nginx.conf; do /var/lib/docker/volumes/my-vol/_data/nginx/nginx.conf -s reload; done
