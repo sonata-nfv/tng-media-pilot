@@ -1,0 +1,20 @@
+---
+descriptor_extension: yml
+version: '0.5'
+package:
+  vendor: "eu.5gtango"
+  name: "ns-mediapilot-service"
+  version: "0.1"
+  maintainer: "Ignacio Dominguez"
+  description: "This is the 5GTANGO network service for the media pilot"
+files:
+  - path: "Definitions/mediapilot-ns.yml"
+    type: "application/vnd.5gtango.nsd"
+  - path: "Definitions/agregator-vnf.yml"
+    type: "application/vnd.5gtango.vnfd"
+  - path: "Definitions/streamingengine-vnf.yml"
+    type: "application/vnd.5gtango.vnfd"
+  - path: "Icons/upb_logo.png"
+    type: "image/png"
+  - path: "Licenses/LICENSE"
+    type: "text/plain"
