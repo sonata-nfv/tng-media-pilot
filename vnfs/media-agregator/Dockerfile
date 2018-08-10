@@ -59,7 +59,8 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
 RUN rm -rf /var/cache/* /tmp/*
 
 #Modify the nginx.conf:
-ADD nginx.conf /var/lib/docker/volumes/my-vol/_data/nginx/nginx.conf
+#ADD nginx.conf /var/lib/docker/volumes/my-vol/_data/nginx/nginx.conf
+ADD nginx.conf /opt/nginx/nginx.conf
 ADD static /www/static
 
 #Install API dependencies:

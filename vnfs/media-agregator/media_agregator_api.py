@@ -35,8 +35,9 @@
 import conf_formatter
 from flask import Flask, request, json
 
-CONF_PATH = '/var/lib/docker/volumes/my-vol/_data/nginx/nginx.conf'
+#CONF_PATH = '/var/lib/docker/volumes/my-vol/_data/nginx/nginx.conf'
 #CONF_PATH = 'nginx.conf'
+CONF_PATH = '/opt/nginx/nginx.conf'
 
 app = Flask(__name__)
 
@@ -47,8 +48,8 @@ def connect_camera():
 
     stream_app = input_json['stream_app']
 
-    code_block = "application "+ stream_app + " {\n " \
-                                              "live on;\n " \
+    code_block = "application " + stream_app + " {\n" \
+                                              "live on;\n" \
                                               "record off;\n" \
                                               "#-Insert Push here-\n" \
                                               "}\n"
@@ -63,7 +64,7 @@ def connect_camera():
         with open(CONF_PATH, "w") as output:
             output.write(data_str)
 
-    conf_formatter.format_config_file("CONF_PATH")
+    conf_formatter.format_config_file(CONF_PATH)
 
     response = {}
     response["code"] = 200
@@ -81,7 +82,9 @@ def connect_stream():
     stream_app = input_json['stream_app']
     stream_key = input_json['stream_key']
 
-    push_url = "push rtmp://10.100.16.56:1935/stream/"+stream_key+";" #TODO: Change the harcoded url to the real server
+    #push_url = "push rtmp://10.100.16.56:1935/stream/"+stream_key+";" #TODO: Change the harcoded url to the real server
+    push_url = "push rtmp://192.168.137.31:1935/stream/"+stream_key+";"
+
 
     with open(CONF_PATH, "r") as myfile:
         data = myfile.readlines()
@@ -98,7 +101,8 @@ def connect_stream():
     response = {}
     response["code"] = 200
     response["type"] = "?"
-    response["message"] = "http://10.100.16.56/live/"+stream_key+".m3u8" #TODO: Change the harcoded url to the real server
+    #response["message"] = "http://10.100.16.56/live/"+stream_key+".m3u8" #TODO: Change the harcoded url to the real server
+    response["message"] = "http://192.168.137.31/live/"+stream_key+".m3u8"
 
     return json.dumps(response, sort_keys= False)
 
