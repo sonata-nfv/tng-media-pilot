@@ -14,7 +14,7 @@ files:
     type: "application/vnd.5gtango.vnfd"
   - path: "Definitions/streamingengine-vnf.yml"
     type: "application/vnd.5gtango.vnfd"
-  - path: "Icons/upb_logo.png"
+  - path: "Icons/atos_logo.png"
     type: "image/png"
   - path: "Licenses/LICENSE"
     type: "text/plain"
