@@ -81,10 +81,9 @@ def connect_stream():
 
     stream_app = input_json['stream_app']
     stream_key = input_json['stream_key']
+    stream_engine_IP = input_json['stream_engine_IP']
 
-    #push_url = "push rtmp://10.100.16.56:1935/stream/"+stream_key+";" #TODO: Change the harcoded url to the real server
-    push_url = "push rtmp://192.168.137.31:1935/stream/"+stream_key+";"
-
+    push_url = "push rtmp://"+stream_engine_IP+":1935/live/"+stream_key+";"
 
     with open(CONF_PATH, "r") as myfile:
         data = myfile.readlines()
@@ -101,8 +100,7 @@ def connect_stream():
     response = {}
     response["code"] = 200
     response["type"] = "?"
-    #response["message"] = "http://10.100.16.56/live/"+stream_key+".m3u8" #TODO: Change the harcoded url to the real server
-    response["message"] = "http://192.168.137.31/live/"+stream_key+".m3u8"
+    response["message"] = "http://"+stream_engine_IP+":8080/hls/"+stream_key+".m3u8"
 
     return json.dumps(response, sort_keys= False)
 
