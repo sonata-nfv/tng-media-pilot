@@ -32,12 +32,11 @@
 ## acknowledge the contributions of their colleagues of the 5GTANGO
 ## partner consortium (www.5gtango.eu).
 
-import conf_formatter
-from flask import Flask, request, json
+from flask import Flask, request, json, render_template
+import sqlite3 as lite
 
-#CONF_PATH = '/var/lib/docker/volumes/my-vol/_data/nginx/nginx.conf'
-#CONF_PATH = 'nginx.conf'
-CONF_PATH = '/opt/nginx/nginx.conf'
+#CONF_PATH = '/opt/nginx/nginx.conf'
+CONF_PATH = 'nginx.conf'
 
 app = Flask(__name__)
 
@@ -48,23 +47,22 @@ def connect_camera():
 
     stream_app = input_json['stream_app']
 
-    code_block = "application " + stream_app + " {\n" \
-                                              "live on;\n" \
-                                              "record off;\n" \
-                                              "#-Insert Push here-\n" \
-                                              "}\n"
+    con = lite.connect('agregator.db')
 
-    with open(CONF_PATH, "r") as myfile:
-        data = myfile.readlines()
-        index = data.index('        #-Insert Application here-\n')
-        data.insert(index + 1, code_block)
+    cur = con.cursor()
+    cur.execute('INSERT INTO agregator (name) VALUES(?)', [stream_app])
 
-        data_str = ''.join(data)
+    con.commit()
 
-        with open(CONF_PATH, "w") as output:
-            output.write(data_str)
+    cur.execute('SELECT * from agregator')
+    table = cur.fetchall()
+    table = sorted(table, key=lambda x: (x[0]))
 
-    conf_formatter.format_config_file(CONF_PATH)
+    conf = open(CONF_PATH, 'r+')
+    conf.seek(0)
+    conf.write(render_template('nginx.conf', table=table))
+    conf.truncate()
+    conf.close()
 
     response = {}
     response["code"] = 200
@@ -72,7 +70,6 @@ def connect_camera():
     response["message"] = "TODO"
 
     return json.dumps(response, sort_keys=False)
-
 
 """This function adds a push statement in the specific app"""
 @app.route("/connectStream", methods=["PUT"])
@@ -85,17 +82,34 @@ def connect_stream():
 
     push_url = "push rtmp://"+stream_engine_IP+":1935/live/"+stream_key+";"
 
-    with open(CONF_PATH, "r") as myfile:
-        data = myfile.readlines()
-        index = data.index('        application ' + stream_app + ' {\n')
-        data.insert(index + 4, push_url)
+    con = lite.connect('agregator.db')
 
-        data_str = ''.join(data)
+    cur = con.cursor()
+    cur.execute('SELECT * from agregator')
+    table = cur.fetchall()
 
-        with open(CONF_PATH, "w") as output:
-            output.write(data_str)
+    if stream_app in table:
+        app_index = table.index(stream_app)
+        if None in table[app_index]:
+            del table[app_index]
+            table.append(tuple((stream_app, push_url)))
+            cur.execute('insert into agregator (name, url) values (?,?)', table[len(table)-1])
+        else:
+            table.append(tuple((stream_app, push_url)))
+            cur.execute('insert into agregator (name, url) values (?,?)', table[len(table)-1])
+    else:
+        table.append(tuple((stream_app, push_url)))
+        cur.execute('insert into agregator (name, url) values (?,?)', table[len(table)-1])
 
-    conf_formatter.format_config_file(CONF_PATH)
+    con.commit()
+
+    table = sorted(table, key=lambda x: (x[0]))
+
+    conf = open(CONF_PATH, 'r+')
+    conf.seek(0)
+    conf.write(render_template('nginx.conf', table=table, table1=table))
+    conf.truncate()
+    conf.close()
 
     response = {}
     response["code"] = 200
@@ -103,8 +117,6 @@ def connect_stream():
     response["message"] = "http://"+stream_engine_IP+":8080/hls/"+stream_key+".m3u8"
 
     return json.dumps(response, sort_keys= False)
-
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

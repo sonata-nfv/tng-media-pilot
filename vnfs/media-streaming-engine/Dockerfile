@@ -91,6 +91,6 @@ RUN rm -rf /var/cache/* /tmp/*
 
 # Add NGINX config and static files.
 ADD nginx.conf /opt/nginx/nginx.conf
-ADD static /www/static
+ADD static /static
 
 CMD ["/opt/nginx/sbin/nginx"]

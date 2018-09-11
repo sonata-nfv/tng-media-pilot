@@ -31,8 +31,6 @@ RUN apk update && apk add \
   python3-dev \
   inotify-tools
 
-  
-
 #Get the nginx source:
 RUN cd /tmp && \
   wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
@@ -59,7 +57,6 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
 RUN rm -rf /var/cache/* /tmp/*
 
 #Modify the nginx.conf:
-#ADD nginx.conf /var/lib/docker/volumes/my-vol/_data/nginx/nginx.conf
 ADD nginx.conf /opt/nginx/nginx.conf
 ADD static /www/static
 
