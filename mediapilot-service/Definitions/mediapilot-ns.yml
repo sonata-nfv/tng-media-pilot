@@ -1,0 +1,60 @@
+descriptor_version: "1.0"
+vendor: "atos"
+name: "mediapilot-service"
+version: "0.1"
+author: "Ignacio Dominguez @: atos"
+description: "Descriptor mediapilot-service"
+##
+## The various network functions this service
+## is composed of.
+##
+network_functions: 
+  - vnf_id: "vnf-agregator"
+    vnf_vendor: "atos"
+    vnf_name: "agregator-vnf"
+    vnf_version: "0.1"
+  - vnf_id: "vnf-streamingengine"
+    vnf_vendor: "atos"
+    vnf_name: "streamingengine-vnf"
+    vnf_version: "0.1"
+
+
+##
+## The NS connection points to the
+## outside world.
+##
+connection_points:
+  - id: "nscpmgmt"
+    interface: "ipv4"
+    type: "management"
+  - id: "nscpexternal"
+    interface: "ipv4"
+    type: "external"
+
+testing_tags: 
+  - http
+
+##
+## The virtual links that interconnect
+## the different connections points.
+##
+virtual_links:
+  - id: "vlmgmt"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vnf-agregator:cpmgmt"
+      - "vnf-streamingengine:cpmgmt"
+      - "nscpmgmt"
+  - id: "vlexternal"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vnf-agregator:cpexternal"
+      - "vnf-streamingengine:cpexternal"
+      - "nscpexternal"
+  - id: "vlinternal"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vnf-agregator:cpinternal"
+      - "vnf-streamingengine:cpinternal"
+
+                 

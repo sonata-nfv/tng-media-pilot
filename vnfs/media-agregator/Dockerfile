@@ -31,8 +31,6 @@ RUN apk update && apk add \
   python3-dev \
   inotify-tools
 
-  
-
 #Get the nginx source:
 RUN cd /tmp && \
   wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
@@ -44,7 +42,7 @@ RUN cd /tmp && \
   wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_VERSION}.tar.gz && \
   tar zxf v${NGINX_RTMP_VERSION}.tar.gz && rm v${NGINX_RTMP_VERSION}.tar.gz
 
-#Compile nginx + module:
+#Compile nginx + module:	
 RUN cd /tmp/nginx-${NGINX_VERSION} && \
   ./configure \
   --prefix=/opt/nginx \
