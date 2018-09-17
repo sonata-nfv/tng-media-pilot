@@ -3,7 +3,7 @@ vendor: "atos"
 name: "mediapilot-service"
 version: "0.1"
 author: "Ignacio Dominguez @: atos"
-description: "Descriptor mediapilot-service"
+description: "This NS provides the video streaming service for the inmersive media pilot."
 ##
 ## The various network functions this service
 ## is composed of.
