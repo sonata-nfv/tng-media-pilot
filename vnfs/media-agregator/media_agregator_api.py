@@ -35,8 +35,8 @@
 from flask import Flask, request, json, render_template
 import sqlite3 as lite
 
-#CONF_PATH = '/opt/nginx/nginx.conf'
-CONF_PATH = 'nginx.conf'
+CONF_PATH = '/opt/nginx/nginx.conf'
+#CONF_PATH = 'nginx.conf'
 
 app = Flask(__name__)
 
