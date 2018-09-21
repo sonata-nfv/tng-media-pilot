@@ -17,7 +17,10 @@ network_functions:
     vnf_vendor: "atos"
     vnf_name: "streamingengine-vnf"
     vnf_version: "0.1"
-
+  - vnf_id: "vnf-cms"
+    vnf_vendor: "Nurogames"
+    vnf_name: "cms-vnf"
+    vnf_version: "0.1"
 
 ##
 ## The NS connection points to the
@@ -44,17 +47,26 @@ virtual_links:
     connection_points_reference:
       - "vnf-agregator:cpmgmt"
       - "vnf-streamingengine:cpmgmt"
+      - "vnf-cms:cpmgmt"
       - "nscpmgmt"
   - id: "vlexternal"
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "vnf-agregator:cpexternal"
       - "vnf-streamingengine:cpexternal"
+      - "vnf-cms:cpexternal"
       - "nscpexternal"
+
+##  - id: "vlinternal"
+##    connectivity_type: "E-Line"
+##    connection_points_reference:
+##      - "vnf-agregator:cpinternal"
+##      - "vnf-streamingengine:cpinternal"
+
   - id: "vlinternal"
-    connectivity_type: "E-Line"
+    connectivity_type: "E-LAN"
     connection_points_reference:
       - "vnf-agregator:cpinternal"
       - "vnf-streamingengine:cpinternal"
+      - "vnf-cms:cpinternal"
 
-                 
