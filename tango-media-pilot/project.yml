@@ -1,8 +1,0 @@
-descriptor_extension: yml
-package:
-  description: 5GTANGO INMERSIVE MEDIA PILOT
-  maintainer: Ignacio Dominguez, ATOS, ignacio.dominguezgomez@atos.net
-  name: "media-pilot"
-  vendor: "5gtango"
-  version: "0.5"
-version: '0.5'

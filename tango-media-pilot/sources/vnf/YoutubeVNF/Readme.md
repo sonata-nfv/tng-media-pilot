@@ -1,1 +1,0 @@
-This is a youtube search stream virtual network function for the 5G Tango Project.
