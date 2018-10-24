@@ -11,7 +11,7 @@ EXPOSE 80
 RUN mkdir -p /opt/data && mkdir /www
 
 # Build dependencies.
-RUN	apk update && apk add	\
+RUN	apk update && apk add --no-cache	\
   binutils \
   binutils-libs \
   build-base \
@@ -52,9 +52,9 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
   cd /tmp/nginx-${NGINX_VERSION} && make && make install
 
 # FFmpeg dependencies.
-RUN apk add --update nasm yasm-dev lame-dev libogg-dev x264-dev libvpx-dev libvorbis-dev x265-dev freetype-dev libass-dev libwebp-dev rtmpdump-dev libtheora-dev opus-dev
+RUN apk add --no-cache --update nasm yasm-dev lame-dev libogg-dev x264-dev libvpx-dev libvorbis-dev x265-dev freetype-dev libass-dev libwebp-dev rtmpdump-dev libtheora-dev opus-dev
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
-RUN apk add --update fdk-aac-dev
+RUN apk add --no-cache --update fdk-aac-dev
 
 # Get FFmpeg source.
 RUN cd /tmp/ && \
