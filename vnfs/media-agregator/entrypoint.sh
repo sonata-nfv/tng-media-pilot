@@ -17,6 +17,14 @@ if [ $status -ne 0 ]; then
   exit $status
 fi
 
+# Start the media_agregator_api process:
+/app/stats_extractor.py &
+status=$?
+if [ $status -ne 0 ]; then
+  echo "Failed to start stats_extractor: $status"
+  exit $status
+fi
+
 #Start the nginx_notifier process:
 /app/nginx_notifier.sh &
 status=$?
@@ -36,9 +44,11 @@ while sleep 60; do
   PROCESS_1_STATUS=$?
   ps aux |grep media_agregator_api.py |grep -q -v grep
   PROCESS_2_STATUS=$?
-  ps aux |grep nginx_notifier.sh |grep -q -v grep 
+  ps aux |grep stats_extractor.py |grep -q -v grep
   PROCESS_3_STATUS=$?
-  if [ $PROCESS_1_STATUS -ne 0 -o $PROCESS_2_STATUS -ne 0 -o $PROCESS_3_STATUS -ne 0 ]; then
+  ps aux |grep nginx_notifier.sh |grep -q -v grep 
+  PROCESS_4_STATUS=$?
+  if [ $PROCESS_1_STATUS -ne 0 -o $PROCESS_2_STATUS -ne 0 -o $PROCESS_3_STATUS -ne 0 -o $PROCESS_4_STATUS -ne 0 ]; then
     echo "One of the processes has already exited."
     exit 1
   fi

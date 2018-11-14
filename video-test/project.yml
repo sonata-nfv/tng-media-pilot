@@ -1,0 +1,20 @@
+---
+descriptor_extension: yml
+version: '0.5'
+package:
+  vendor: "eu.5gtango"
+  name: "test-http-benchmarking-media"
+  version: "0.1"
+  maintainer: "Ignacio Dominguez, ATOS"
+  description: "This is a 5GTANGO test package for the video flow of Immersive media pilot"
+files:
+  - path: "Definitions/test-descriptor.yml"
+    type: "application/vnd.5gtango.tstd"
+  - path: "Icons/atos_logo.png"
+    type: "image/png"
+  - path: "Licenses/LICENSE"
+    type: "text/plain"
+  - path: "Tests/config.cfg"
+    type: "text/plain"
+  - path: "Tests/runner.sh"
+    type: "text/x-shellscript"

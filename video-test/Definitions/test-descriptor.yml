@@ -1,0 +1,26 @@
+descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml"
+vendor: "eu.5gtango.atos"
+name: "test-http-benchmark-media-video"
+version: "0.1"
+author: "Ignacio Dominguez, ATOS"
+description: >
+  "Test descriptor for http benchmarking"
+test_type: bash
+test_configuration_parameters:
+      - parameter_name: "config_file"
+        parameter_definition: "location of the test file"
+        parameter_value: "config.cfg"
+        content_type: "text/plain"
+      - parameter_name: "runner_file"
+        parameter_definition: "bash script to run the http benchmark test within docker container"
+        parameter_value: "runner.sh"
+        content_type: "text/plain"
+test_category:
+    - category_type: performance
+
+#test tags are
+test_execution:
+    - test_tag: http-media
+      tag_id: tag_001
+    - test_tag: proxy
+      tag_id: tag_002
