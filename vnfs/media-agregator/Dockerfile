@@ -5,7 +5,7 @@ ENV NGINX_RTMP_VERSION 1.2.1
 ENV FFMPEG_VERSION 3.4.2
 
 EXPOSE 1935
-EXPOSE 80
+EXPOSE 8080
 
 RUN mkdir -p /opt/data && mkdir /www
 
@@ -57,14 +57,14 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
 #Cleanup:
 RUN rm -rf /var/cache/* /tmp/*
 
+#Install API dependencies:
+COPY ./requirements.txt /app/requirements.txt
+
 #Modify the nginx.conf:
 ADD nginx.conf /opt/nginx/nginx.conf
 ADD static /www/static
 
-#Install API dependencies:
-COPY ./requirements.txt /app/requirements.txt
-
-WORKDIR /app 
+WORKDIR /app
 
 RUN pip3 install -r requirements.txt
 
