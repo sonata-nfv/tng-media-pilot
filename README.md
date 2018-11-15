@@ -25,7 +25,7 @@ as the end user device. The camera can stream a video and the all the
 VNFs will be deployed at the same location.Depicts the VNFs that will 
 be deployed for the NS to run.
 
-![Single Location Streaming](images/deployment_UC1_2.3.png){#fig:IMD_UC1  .class width=70%}
+![Single Location Streaming](images/deployment_UC1_2.3.png)
 
 #### Multi location streaming
 
@@ -37,7 +37,7 @@ Streaming servers deployed in the network service. The platform should
 be able to scale the VNfs based on the location requirements and the 
 number of users. 
 
-![Multi location streaming](images/Deployment-UC2_2.3.png){#fig:IMD_UC2  .class width=70%}
+![Multi location streaming](images/Deployment-UC2_2.3.png)
 
 #### Streaming with near real-time video analysis
 
@@ -48,7 +48,7 @@ real-time. The analysis will include game information, player statistics,
 highlighting of sports equipment such as balls in table tennis. Shows 
 the usage of video analysis VNFs on top of UC1.
 
-![Streaming with Video Analysis](images/deployment_UC3_2.3.png){#fig:IMD_UC3  .class width=70%}
+![Streaming with Video Analysis](images/deployment_UC3_2.3.png)
 
 ## Network Service Components
 * Media-Content-Manager: The user (producers and clients) gateway to the service. 
