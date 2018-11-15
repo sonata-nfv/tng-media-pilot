@@ -1,7 +1,7 @@
 # media-aggregator
 
 
-##API description
+## API description
 ### connectCamera
 This method creates a new application inside Nginx where the camera can send the video through RTMP. The input of this method is a simple JSON file:
 
