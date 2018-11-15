@@ -8,10 +8,10 @@ via RTMP, like if it was a camera.
 
 The container starts with the following instruction:
 ```docker run -d -e AGGREGATOR='[media-aggregator-ip]' -e APP='[nginx-app-route]' -e STREAM='[video-name]' ignaciodomin/media-cpe:demo```
-###Stats from CPE
+### Stats from CPE
 
-##Content Consumer Emulator (CCE)
+## Content Consumer Emulator (CCE)
 
 
-###Stats from CCE
+### Stats from CCE
     
