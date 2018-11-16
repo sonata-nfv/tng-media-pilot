@@ -1,92 +1,36 @@
-# docker-nginx-rtmp
-A Dockerfile installing NGINX, nginx-rtmp-module and FFmpeg from source with
-default settings for HLS live streaming. Built on Alpine Linux.
+# media-streaming-engine
 
-* Nginx 1.13.9 (compiled from source)
-* nginx-rtmp-module 1.2.1 (compiled from source)
-* ffmpeg 3.4.2 (compiled from source)
-* Default HLS settings (See: [nginx.conf](nginx.conf))
+This VNF implements the adaptive streaming algorithm, first transcodes 
+the video to different qualities and then generates the HLS manifest. 
 
-[![Docker Stars](https://img.shields.io/docker/stars/alfg/nginx-rtmp.svg)](https://hub.docker.com/r/alfg/nginx-rtmp/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/alfg/nginx-rtmp.svg)](https://hub.docker.com/r/alfg/nginx-rtmp/)
-[![Docker Automated build](https://img.shields.io/docker/automated/alfg/nginx-rtmp.svg)](https://hub.docker.com/r/alfg/nginx-rtmp/builds/)
-[![Build Status](https://travis-ci.org/alfg/docker-nginx-rtmp.svg?branch=master)](https://travis-ci.org/alfg/docker-nginx-rtmp)
-
-## Usage
-
-### Server
-* Pull docker image and run:
+It is built with Nginx compiled with the RTMP module. The transcoding 
+is implemented with ffmpeg.
 ```
-docker pull alfg/nginx-rtmp
-docker run -it -p 1935:1935 -p 8080:80 --rm alfg/nginx-rtmp
-```
-or 
-
-* Build and run container from source:
-```
-docker build -t nginx-rtmp .
-docker run -it -p 1935:1935 -p 8080:80 --rm nginx-rtmp
-```
-
-* Stream live content to:
-```
-rtmp://<server ip>:1935/stream/$STREAM_NAME
-```
-
-### OBS Configuration
-* Stream Type: `Custom Streaming Server`
-* URL: `rtmp://localhost:1935/stream`
-* Stream Key: `hello`
-
-### Watch Stream
-* In Safari, VLC or any HLS player, open:
-```
-http://<server ip>:8080/live/$STREAM_NAME.m3u8
-```
-* Example: `http://localhost:8080/live/hello`
-
-
-### FFmpeg Build
-```
-ffmpeg version 3.4.2 Copyright (c) 2000-2018 the FFmpeg developers
-  built with gcc 5.3.0 (Alpine 5.3.0)
-  configuration: --enable-version3 --enable-gpl --enable-nonfree --enable-small --enable-libmp3lame --enable-libx264 --enable-libx265 --enable-libvpx --enable-libtheora --enable-libvorbis --enable-libopus --enable-libfdk-aac --enable-libass --enable-libwebp --enable-librtmp --enable-postproc --enable-avresample --enable-libfreetype --enable-openssl --disable-debug
-  libavutil      55. 78.100 / 55. 78.100
-  libavcodec     57.107.100 / 57.107.100
-  libavformat    57. 83.100 / 57. 83.100
-  libavdevice    57. 10.100 / 57. 10.100
-  libavfilter     6.107.100 /  6.107.100
-  libavresample   3.  7.  0 /  3.  7.  0
-  libswscale      4.  8.100 /  4.  8.100
-  libswresample   2.  9.100 /  2.  9.100
-  libpostproc    54.  7.100 / 54.  7.100
-
-  configuration:
-    --enable-version3
-    --enable-gpl
-    --enable-nonfree
-    --enable-small
-    --enable-libmp3lame
-    --enable-libx264
-    --enable-libx265
-    --enable-libvpx
-    --enable-libtheora
-    --enable-libvorbis
-    --enable-libopus
-    --enable-libfdk-aac
-    --enable-libass
-    --enable-libwebp
-    --enable-librtmp
-    --enable-postproc
-    --enable-avresample
-    --enable-libfreetype
-    --enable-openssl
-    --disable-debug
-```
-
-## Resources
-* https://alpinelinux.org/
-* http://nginx.org
-* https://github.com/arut/nginx-rtmp-module
-* https://www.ffmpeg.org
-* https://obsproject.com
+ffmpeg -i rtmp://localhost:1935/$app/$name -async 1 -vsync -1
+       -c:v libx264 -c:a libfdk_aac -profile:a aac_he -b:v 400k -b:a 64k -vf "scale=720:trunc(ow/a/2)*2" -tune zerolatency -preset superfast -f flv rtmp://localhost:1935/show/$name_mid
+       -c:v libx264 -c:a libfdk_aac -profile:a aac_he -b:v 800k -b:a 64k -vf "scale=1280:trunc(ow/a/2)*2" -tune zerolatency -preset superfast -f flv rtmp://localhost:1935/show/$name_hd720
+       -c:v copy -c:a libfdk_aac -profile:a aac_he -f flv rtmp://localhost:1935/show/$name_src; 
+``` 
+## Qualities details
+There are three different qualities configured in the streaming-engine:
+* **Low:** 
+    * **Video codec:** H264
+    * **Audio codec:** AAC
+    * **Video bitrate:** 400k
+    * **Audio bitrate:** 64k
+    * **Resolution:** HD720
+    * **Network bandwidth specification:** 4 Mbps
+* **Mid:**
+    * **Video codec:** H264
+    * **Audio codec:** AAC
+    * **Video bitrate:** 800k
+    * **Audio bitrate:** 64k
+    * **Resolution:** HD1080
+    * **Network bandwidth specification:** 8Mbps
+* **Source:**
+    * **Video codec:** H264
+    * **Audio codec:** AAC
+    * **Video bitrate:** original
+    * **Audio bitrate:** original 
+    * **Resolution:** original
+    * **Network bandwidth specification:** 10Mbps
