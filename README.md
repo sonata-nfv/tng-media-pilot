@@ -71,3 +71,6 @@ media-aggregator.
 * Content-Consumer-Emulator: Simulates the rol of the users playing the video from the
 streaming-engine. 
 
+## Support
+[![Join the chat at https://gitter.im/sonata-nfv/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sonata-nfv/Lobby)
+
