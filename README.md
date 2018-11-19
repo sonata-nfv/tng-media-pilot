@@ -1,6 +1,6 @@
 [![Join the chat at https://gitter.im/sonata-nfv/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sonata-nfv/Lobby)
 
-<p align="center"><img src="https://github.com/sonata-nfv/tng-media-pilot/images/sonata-5gtango-logo-500px.png" /></p>
+<p align="center"><img src="images/sonata-5gtango-logo-500px.png" /></p>
 
 
 # tng-media-pilot
