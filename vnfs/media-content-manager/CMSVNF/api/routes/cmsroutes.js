@@ -18,4 +18,7 @@ module.exports = function(kApp)
 
   kApp.route("/getStreamURL")
     .get(kController.GetStreamURL);
-};
+
+  kApp.route("/registerCamera")
+    .post(kController.RegisterCamera);
+  };

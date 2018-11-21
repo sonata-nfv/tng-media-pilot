@@ -22,9 +22,9 @@ app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
   
-let routes = require('./api/routes/cmsRoutes'); //importing route
+let routes = require('./api/routes/cmsroutes'); //importing route
 routes(app); //register the route
 
 app.listen(port);
 
-console.log('todo list RESTful API server started on: ' + port);
+console.log('5GTango CMS VNF started on: ' + port);

@@ -1,12 +1,23 @@
 'use strict'
 
-function kAggregator( id, name, location)
+let kAggregatorIP = process.env.AggregatorIP;
+
+let kRequest = require('request');
+
+function kAggregator( id, name, location, ip)
 {
     this.id = id;
 
     this.name = name;
 
     this.location = location;
+
+    this.ip = ip;
+}
+
+function kCamera( name)
+{
+    this.name = name;
 }
 
 function kStream( id, name, description, Aggregator_id)
@@ -21,6 +32,8 @@ function kStream( id, name, description, Aggregator_id)
 }
 
 let kAggregators = [];
+
+let kCameras = [];
 
 let kStreams = [];
 
@@ -59,9 +72,14 @@ exports.RegisterAggregator = function( req, res)
 
   res.json( "Aggregator registered successfully");
 
+  let AggregatorIP = req.headers['x-forwarded-for'] ||
+                     req.connection.remoteAddress;
+
   let kNewAggregator = new kAggregator( req.body.id,
                                         req.body.name,
-                                        req.body.location);
+                                        req.body.location,
+                                        AggregatorIP
+                                      );
 
   kAggregators.push( kNewAggregator);
 
@@ -200,17 +218,133 @@ exports.GetContentList = function( req, res)
 
   res.status( 200);
 
-  res.send( kStreams);
+  res.send( kCameras);
 };
 
 // --- GetStreamURL ------------------------------------------------------------
 
 exports.GetStreamURL = function( req, res)
 {
-  console.log(req);
+  console.log(req.query);
 
-  console.log(res);
+  //todo: location check
+
+  res.status( 200);
+
+  let StreamURL = GetCameraStream(req.query.name);
+
+  // hack for demo
+  let UrlObject = {};
+
+ /* if (req.query.stream_id === "Stream_1")
+  {
+    UrlObject.url = "https://www.nurogames.com/tmp-video/360_VR_Master_Series_Free_Download_Crystal_Shower_Falls.mp4";
+  }
+  else
+  {
+    UrlObject.url = "https://www.nurogames.com/tmp-video/TangoV2.mp4";
+  }*/
+  
+  UrlObject.url = StreamURL;
+
+  res.send(JSON.stringify(UrlObject));
+  
+  return;
+  // hack end
+  
+  let kCheckValuesString = CheckValues( req.query,
+                                        "stream_id");
+
+  if (kCheckValuesString != "")
+  {
+    res.status( 400);
+
+    res.send( kCheckValuesString);
+    
+    return;
+  }
+
+  let kStream = kStreams.filter( function( object)
+  {
+    return object.id == req.query.stream_id;
+  });
+
+  if (kStream.length == 0)
+  {
+    res.status( 404);
+
+    res.send( "Stream with id '"+req.query.stream_id+"' not found.");
+
+    return;
+  }
+
+  let kAggregator = kAggregators.filter( function( object)
+  {
+    return object.id == kStream[0].Aggregator_id;
+  });
+
+  if (kAggregator.length == 0)
+  {
+    res.status( 404);
+
+    res.send( "No Aggregator is hosting this stream.");
+
+    return;
+  }
+
+  kRequest( kAggregator[0].ip+"/connectStream?stream_id="+kStream[0].id,
+            function ( error, response, body) {
+              console.log("error: "+error);
+              console.log('statusCode:', response && response.statusCode);
+              res.send(body);
+            });
+
 };
+
+// --- Register camera ---------------------------------------------------------
+
+exports.RegisterCamera = function( req, res)
+{
+  console.log( req.body);
+
+  res.status( 200);
+
+  let kCheckValuesString = CheckValues( req.body, "name");
+
+  if (kCheckValuesString != "")
+  {
+    res.status( 400);
+
+    res.send( kCheckValuesString);
+    
+    return;
+  }
+  
+  let kDuplicates = kCameras.filter( function( object)
+  {
+    return object.name == req.body.name;
+  });
+
+  if (kDuplicates.length > 0 )
+  {
+    res.status( 409);
+
+    res.send( "Camera already registered!");
+    
+    return;
+  }
+
+  res.json( "Camera registered successfully");
+
+  let kNewCamera = new kCamera( req.body.name);
+
+  kCameras.push( kNewCamera);
+
+  PostRegisterCamera( req.body);
+
+  console.log( kCameras);
+};
+
 
 // --- Helper functions --------------------------------------------------------
 
@@ -251,3 +385,41 @@ function CheckValues()
 
   return kErrorMsg;
 };
+
+function PostRegisterCamera(postData)
+{
+  var clientServerOptions = {
+      uri: 'http://'+kAggregatorIP+'/registerCamera',
+      body: JSON.stringify(postData),
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  }
+  kRequest(clientServerOptions, function (error, response) {
+      if (error != null)
+        console.log(error);
+      else
+        console.log(response.body);
+      return;
+  });
+}
+
+function GetCameraStream(postData)
+{
+  var clientServerOptions = {
+      uri: 'http://'+kAggregatorIP+'/getStream',
+      body: JSON.stringify(postData),
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  }
+  kRequest(clientServerOptions, function (error, response) {
+    if (error != null)
+      console.log(error);
+    else
+      console.log(response.body);
+    return response.body.url;
+  });
+}
