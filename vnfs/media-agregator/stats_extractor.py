@@ -34,33 +34,33 @@
 ## acknowledge the contributions of their colleagues of the 5GTANGO
 ## partner consortium (www.5gtango.eu).
 
-import http.client, xmltodict, json, socket
-
-ip="localhost"
-port="8080"
-path="/static/stat.xsl"
-
-conn = http.client.HTTPConnection(ip,port)
-
-conn.request("GET",path)
-response = conn.getresponse()
-data = response.read()
-conn.close()
-
-data = data.decode("utf-8")
-
-dic = xmltodict.parse(data)
-
-json_string = json.dumps(dic)
-#with open('/opt/stats/MA_stats.json','w') as statsfile:
-#    json.dumps(dic, statsfile)
-
-s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-s.connect("/opt/stats/MA_stats.json") #TODO: change to json file
-s.send(json_string) #TODO: send json file encoded to bytes
-#data = s.recv(1024)
-#print('Received ' + repr(data))
-#s.send(b'Hello, world 2\nOtra linea')
-#data = s.recv(1024)
-s.close()
-#print('Received ' + repr(data))
+# import http.client, xmltodict, json, socket
+#
+# ip="localhost"
+# port="8080"
+# path="/static/stat.xsl"
+#
+# conn = http.client.HTTPConnection(ip,port)
+#
+# conn.request("GET",path)
+# response = conn.getresponse()
+# data = response.read()
+# conn.close()
+#
+# data = data.decode("utf-8")
+#
+# dic = xmltodict.parse(data)
+#
+# json_string = json.dumps(dic)
+# #with open('/opt/stats/MA_stats.json','w') as statsfile:
+# #    json.dumps(dic, statsfile)
+#
+# s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+# s.connect("/opt/stats/MA_stats.json") #TODO: change to json file
+# s.send(json_string) #TODO: send json file encoded to bytes
+# #data = s.recv(1024)
+# #print('Received ' + repr(data))
+# #s.send(b'Hello, world 2\nOtra linea')
+# #data = s.recv(1024)
+# s.close()
+# #print('Received ' + repr(data))

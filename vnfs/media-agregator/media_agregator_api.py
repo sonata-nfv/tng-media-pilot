@@ -40,11 +40,11 @@ CONF_PATH = '/opt/nginx/nginx.conf'
 app = Flask(__name__)
 
 """This function creates an app in the nginx.conf for the new camera"""
-@app.route("/connectCamera", methods=["PUT"])
-def connect_camera():
+@app.route("/registerCamera", methods=["POST"])
+def register_camera():
     input_json = request.get_json()
 
-    stream_app = input_json['stream_app']
+    stream_app = input_json['name']
 
     con = lite.connect('agregator.db')
 
@@ -71,15 +71,16 @@ def connect_camera():
     return json.dumps(response, sort_keys=False)
 
 """This function adds a push statement in the specific app"""
-@app.route("/connectStream", methods=["PUT"])
-def connect_stream():
+@app.route("/getStream", methods=["GET"])
+def get_stream():
     input_json = request.get_json()
 
-    stream_app = input_json['stream_app']
-    stream_key = input_json['stream_key']
-    stream_engine_IP = input_json['stream_engine_IP']
+    stream_app = input_json['name']
+    #stream_key = input_json['stream_key']
+    #stream_engine_IP = input_json['stream_engine_IP']
+    stream_engine_IP = "192.168.137.72"
 
-    push_url = "push rtmp://"+stream_engine_IP+":1935/live/"+stream_key+";"
+    push_url = "push rtmp://"+stream_engine_IP+":1935/live/"+stream_app+";"
 
     con = lite.connect('agregator.db')
 
@@ -111,9 +112,9 @@ def connect_stream():
     conf.close()
 
     response = {}
-    response["code"] = 200
-    response["type"] = "?"
-    response["message"] = "http://"+stream_engine_IP+":8080/hls/"+stream_key+".m3u8"
+    #response["code"] = 200
+    #response["type"] = "?"
+    response["message"] = "http://"+stream_engine_IP+":8080/hls/"+stream_app+".m3u8"
 
     return json.dumps(response, sort_keys= False)
 
