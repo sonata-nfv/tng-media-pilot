@@ -112,11 +112,11 @@ def get_stream():
     conf.close()
 
     response = {}
-    #response["code"] = 200
-    #response["type"] = "?"
-    response["message"] = "http://"+stream_engine_IP+":8080/hls/"+stream_app+".m3u8"
+    response["code"] = 200
+    response["type"] = "?"
+    response["url"] = "http://"+stream_engine_IP+":8080/hls/"+stream_app+".m3u8"
 
-    return json.dumps(response, sort_keys= False)
+    return json.dumps(response, sort_keys=False)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
