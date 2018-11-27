@@ -2,11 +2,13 @@
 ## Some general information regarding this
 ## VNF descriptor.
 ##
-descriptor_version: "vnfd-schema-01"
+#descriptor_version: "vnfd-schema-01"
+#descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml
+descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml
 vendor: "atos"
 name: "streamingengine-vnf"
 version: "0.1"
-author: "Ignacio Dominguez :@ ATOS"
+author: "Ignacio Dominguez :@ atos"
 description: "Implements the adaptive streaming and serves the videos to the clients"
 ##
 ## The virtual deployment unit.
@@ -15,7 +17,7 @@ virtual_deployment_units:
   - id: "vdu01"
     vm_image: "http://www.google.es"
     vm_image_format: "qcow2"
-    vm_image_md5: 'f6208100124978b2645e6c1ba4a890ba'
+    vm_image_md5: '067b724755ebca5835b8f3ec52bf2ff4'
     resource_requirements:
       cpu:
         vcpus: 2

@@ -2,11 +2,12 @@
 ## Some general information regarding this
 ## VNF descriptor.
 ##
-descriptor_version: "vnfd-schema-01"
+#descriptor_version: "vnfd-schema-01"
+descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml
 vendor: "nuromedia"
 name: "cms-vnf"
 version: "0.1"
-author: "Robert Mueller :@ Nuromedia"
+author: "Robert Mueller :@ nuromedia"
 description: "Stream to end user connection"
 ##
 ## The virtual deployment unit.
@@ -15,7 +16,7 @@ virtual_deployment_units:
   - id: "vdu01"
     vm_image: "http://www.google.es"
     vm_image_format: "qcow2"
-    vm_image_md5: 'c1820c3d07f9061ba624964f9aa49dbd'
+    vm_image_md5: '55edd17078c32abfd902b95d51e3f20f'
     resource_requirements:
       cpu:
         vcpus: 4

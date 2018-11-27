@@ -1,4 +1,5 @@
-descriptor_version: "1.0"
+#descriptor_version: "1.0"
+descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml
 vendor: "eu.sonata-nfv"
 name: "mediapilot-service"
 version: "0.1"
@@ -57,10 +58,13 @@ virtual_links:
       - "vnf-streamingengine:cpexternal"
       - "vnf-cms:cpexternal"
       - "nscpexternal"
-  - id: "vlinternal"
-    connectivity_type: "E-LAN"
+  - id: "cms-aggregator"
+    connectivity_type: "E-Line"
     connection_points_reference:
-      - "vnf-agregator:cpinternal"
-      - "vnf-streamingengine:cpinternal"
       - "vnf-cms:cpinternal"
-
+      - "vnf-agregator:cpinternal1"
+  - id: "aggregator-mse"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vnf-agregator:cpinternal2"
+      - "vnf-streamingengine:cpinternal"
