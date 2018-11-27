@@ -6,7 +6,7 @@ descriptor_version: "vnfd-schema-01"
 vendor: "atos"
 name: "agregator-vnf"
 version: "0.1"
-author: "Ignacio Dominguez :@ ATOS"
+author: "Ignacio Dominguez :@ atos"
 description: "Recieves the streams from the cameras and redirects to the streaming engines"
 ##
 ## The virtual deployment unit.
@@ -15,7 +15,7 @@ virtual_deployment_units:
   - id: "vdu01"
     vm_image: "http://www.google.es"
     vm_image_format: "qcow2"
-    vm_image_md5: 'ab956ee69df374cdcdd42b8fe65f9a32'
+    vm_image_md5: '5cc2341402c73866b1af0a900f9a2940'
     resource_requirements:
       cpu:
         vcpus: 1
@@ -32,7 +32,10 @@ virtual_deployment_units:
       - id: "external"
         interface: "ipv4"
         type: "external"
-      - id: "internal"
+      - id: "internal1"
+        interface: "ipv4"
+        type: "internal"
+      - id: "internal2"
         interface: "ipv4"
         type: "internal"
 
@@ -52,11 +55,16 @@ virtual_links:
     connection_points_reference:
       - "vdu01:external"
       - "cpexternal"
-  - id: "vlinternal"
+  - id: "vlinternal1"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vdu01:internal"
-      - "cpinternal"
+      - "vdu01:internal1"
+      - "cpinternal1"
+  - id: "vlinternal2"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vdu01:internal2"
+      - "cpinternal2"
 
 # connectivity type
 # E-LAN = switch
@@ -73,7 +81,10 @@ connection_points:
   - id: "cpexternal"
     interface: "ipv4"
     type: "external"
-  - id: "cpinternal"
+  - id: "cpinternal1"
+    interface: "ipv4"
+    type: "internal"
+  - id: "cpinternal2"
     interface: "ipv4"
     type: "internal"
 
