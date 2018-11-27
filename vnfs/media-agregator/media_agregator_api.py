@@ -34,8 +34,11 @@
 
 from flask import Flask, request, json, render_template
 import sqlite3 as lite
+import os
 
 CONF_PATH = '/opt/nginx/nginx.conf'
+
+streaming_engine = os.environ['STREAMING_ENGINE']
 
 app = Flask(__name__)
 
@@ -78,7 +81,7 @@ def get_stream():
     stream_app = input_json['name']
     #stream_key = input_json['stream_key']
     #stream_engine_IP = input_json['stream_engine_IP']
-    stream_engine_IP = "192.168.137.72"
+    stream_engine_IP = streaming_engine
 
     push_url = "push rtmp://"+stream_engine_IP+":1935/live/"+stream_app+";"
 
