@@ -15,7 +15,7 @@ virtual_deployment_units:
   - id: "vdu01"
     vm_image: "http://www.google.es"
     vm_image_format: "qcow2"
-    vm_image_md5: '25378eab1148b48c0f7017c8dee58ae7'
+    vm_image_md5: '982a7b82a9d5d01d97ddd277f686af1f'
     resource_requirements:
       cpu:
         vcpus: 1
