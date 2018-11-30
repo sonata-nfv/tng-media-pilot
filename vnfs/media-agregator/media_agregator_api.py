@@ -38,7 +38,8 @@ import os
 
 CONF_PATH = '/opt/nginx/nginx.conf'
 
-streaming_engine = os.environ['STREAMING_ENGINE']
+streaming_engine_int = os.environ['STREAMING_ENGINE_INT']
+streaming_engine_ext = os.environ['STREAMING_ENGINE_EXT']
 
 app = Flask(__name__)
 
@@ -81,7 +82,8 @@ def get_stream():
     stream_app = input_json['name']
     #stream_key = input_json['stream_key']
     #stream_engine_IP = input_json['stream_engine_IP']
-    stream_engine_IP = streaming_engine
+    stream_engine_IP = streaming_engine_int
+    stream_engine_IP_ext = streaming_engine_ext
 
     push_url = "push rtmp://"+stream_engine_IP+":1935/live/"+stream_app+";"
 
@@ -117,7 +119,7 @@ def get_stream():
     response = {}
     response["code"] = 200
     response["type"] = "?"
-    response["url"] = "http://"+stream_engine_IP+":8080/hls/"+stream_app+".m3u8"
+    response["url"] = "http://"+stream_engine_IP_ext+":8080/hls/"+stream_app+".m3u8"
 
     return json.dumps(response, sort_keys=False)
 
