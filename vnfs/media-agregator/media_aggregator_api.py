@@ -33,7 +33,6 @@
 ## partner consortium (www.5gtango.eu).
 
 from flask import Flask, request, json, render_template
-import sqlite3 as lite
 import os
 
 CONF_PATH = '/opt/nginx/nginx.conf'
@@ -43,29 +42,27 @@ streaming_engine_ext = os.environ['STREAMING_ENGINE_EXT']
 
 app = Flask(__name__)
 
+
 """This function creates an app in the nginx.conf for the new camera"""
 @app.route("/registerCamera", methods=["POST"])
 def register_camera():
     input_json = request.get_json()
 
-    stream_app = input_json['name']
+    camera_name = input_json['name']
 
-    con = lite.connect('agregator.db')
+    with open("conf.json") as conf_json:
+        data = json.load(conf_json)
 
-    cur = con.cursor()
-    cur.execute('INSERT INTO agregator (name) VALUES(?)', [stream_app])
+    data["cameras"].append({
+        "name": camera_name,
+        "push": 0,
+        "streamingEngines": []
+    })
 
-    con.commit()
+    with open("conf.json", "w") as conf_json:
+        json.dump(data, conf_json)
 
-    cur.execute('SELECT * from agregator')
-    table = cur.fetchall()
-    table = sorted(table, key=lambda x: (x[0]))
-
-    conf = open(CONF_PATH, 'r+')
-    conf.seek(0)
-    conf.write(render_template('nginx.conf', table=table))
-    conf.truncate()
-    conf.close()
+    update_nginx(data)
 
     response = {}
     response["code"] = 200
@@ -79,42 +76,22 @@ def register_camera():
 def get_stream():
     input_json = request.get_json()
 
-    stream_app = input_json['name']
-    #stream_key = input_json['stream_key']
-    #stream_engine_IP = input_json['stream_engine_IP']
+    stream_app = input_json["name"]
     stream_engine_IP = streaming_engine_int
     stream_engine_IP_ext = streaming_engine_ext
 
-    push_url = "push rtmp://"+stream_engine_IP+":1935/live/"+stream_app+";"
+    with open("conf.json") as conf_json:
+        data = json.load(conf_json)
 
-    con = lite.connect('agregator.db')
+    for camera in data['cameras']:
+        if camera['name'] == stream_app:
+            camera['push'] =+ 1
+            camera['streamingEngines'].append(stream_engine_IP)
 
-    cur = con.cursor()
-    cur.execute('SELECT * from agregator')
-    table = cur.fetchall()
+    with open("conf.json", "w") as conf_json:
+        json.dump(data, conf_json)
 
-    if stream_app in table:
-        app_index = table.index(stream_app)
-        if None in table[app_index]:
-            del table[app_index]
-            table.append(tuple((stream_app, push_url)))
-            cur.execute('insert into agregator (name, url) values (?,?)', table[len(table)-1])
-        else:
-            table.append(tuple((stream_app, push_url)))
-            cur.execute('insert into agregator (name, url) values (?,?)', table[len(table)-1])
-    else:
-        table.append(tuple((stream_app, push_url)))
-        cur.execute('insert into agregator (name, url) values (?,?)', table[len(table)-1])
-
-    con.commit()
-
-    table = sorted(table, key=lambda x: (x[0]))
-
-    conf = open(CONF_PATH, 'r+')
-    conf.seek(0)
-    conf.write(render_template('nginx.conf', table=table, table1=table))
-    conf.truncate()
-    conf.close()
+    update_nginx(data)
 
     response = {}
     response["code"] = 200
@@ -122,6 +99,13 @@ def get_stream():
     response["url"] = "http://"+stream_engine_IP_ext+":8080/hls/"+stream_app+".m3u8"
 
     return json.dumps(response, sort_keys=False)
+
+def update_nginx(data):
+    conf = open(CONF_PATH, 'r+')
+    conf.seek(0)
+    conf.write(render_template('nginx.conf', data=data))
+    conf.truncate()
+    conf.close()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
