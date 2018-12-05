@@ -46,5 +46,4 @@ while 1:
     data = conn.recv(1024)
     data2 = json.loads(data)
     if not data: break
-    #conn.send(data+b" 1")
 conn.close()
