@@ -11,17 +11,17 @@ description: "This NS provides the video streaming service for the inmersive med
 ## is composed of.
 ##
 network_functions: 
-  - vnf_id: "vnf-agregator"
-    vnf_vendor: "atos"
-    vnf_name: "agregator-vnf"
+  - vnf_id: "vnf-ma"
+    vnf_vendor: "eu.5gtango"
+    vnf_name: "ma-vnfd"
     vnf_version: "0.1"
-  - vnf_id: "vnf-streamingengine"
-    vnf_vendor: "atos"
-    vnf_name: "streamingengine-vnf"
+  - vnf_id: "vnf-mse"
+    vnf_vendor: "eu.5gtango"
+    vnf_name: "mse-vnfd"
     vnf_version: "0.1"
   - vnf_id: "vnf-cms"
-    vnf_vendor: "nuromedia"
-    vnf_name: "cms-vnf"
+    vnf_vendor: "eu.5gtango"
+    vnf_name: "cms-vnfd"
     vnf_version: "0.1"
 
 ##
@@ -47,24 +47,24 @@ virtual_links:
   - id: "vlmgmt"
     connectivity_type: "E-LAN"
     connection_points_reference:
-      - "vnf-agregator:cpmgmt"
-      - "vnf-streamingengine:cpmgmt"
+      - "vnf-ma:cpmgmt"
+      - "vnf-mse:cpmgmt"
       - "vnf-cms:cpmgmt"
       - "nscpmgmt"
   - id: "vlexternal"
     connectivity_type: "E-LAN"
     connection_points_reference:
-      - "vnf-agregator:cpexternal"
-      - "vnf-streamingengine:cpexternal"
+      - "vnf-ma:cpexternal"
+      - "vnf-mse:cpexternal"
       - "vnf-cms:cpexternal"
       - "nscpexternal"
   - id: "cms-aggregator"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "vnf-cms:cpinternal"
-      - "vnf-agregator:cpinternal1"
+      - "vnf-ma:cpinternal1"
   - id: "aggregator-mse"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vnf-agregator:cpinternal2"
-      - "vnf-streamingengine:cpinternal"
+      - "vnf-ma:cpinternal2"
+      - "vnf-mse:cpinternal"

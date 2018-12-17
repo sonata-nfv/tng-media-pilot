@@ -2,7 +2,7 @@
 descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml"
 
 vendor: "eu.5gtango"
-name: "media-streaming-engine-vnf"
+name: "mse-vnfd"
 version: "0.1"
 author: "Ignacio Dominguez"
 description: "Media-streaming-engine VNF descriptor."

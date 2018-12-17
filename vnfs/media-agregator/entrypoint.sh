@@ -10,10 +10,10 @@ if [ $status -ne 0 ]; then
 fi
 
 # Start the media_agregator_api process:
-/app/media_agregator_api.py &
+/app/media_aggregator_api.py &
 status=$?
 if [ $status -ne 0 ]; then
-  echo "Failed to start media_agregator_api: $status"
+  echo "Failed to start media_aggregator_api: $status"
   exit $status
 fi
 
@@ -42,10 +42,10 @@ fi
 while sleep 60; do
   ps aux |grep nginx |grep -q -v grep
   PROCESS_1_STATUS=$?
-  ps aux |grep media_agregator_api.py |grep -q -v grep
+  ps aux |grep media_aggregator_api.py |grep -q -v grep
   PROCESS_2_STATUS=$?
-#  ps aux |grep stats_extractor.py |grep -q -v grep
-#  PROCESS_3_STATUS=$?
+  #ps aux |grep stats_extractor.py |grep -q -v grep
+  #PROCESS_3_STATUS=$?
   ps aux |grep nginx_notifier.sh |grep -q -v grep 
   PROCESS_3_STATUS=$?
   if [ $PROCESS_1_STATUS -ne 0 -o $PROCESS_2_STATUS -ne 0 -o $PROCESS_3_STATUS -ne 0 ]; then

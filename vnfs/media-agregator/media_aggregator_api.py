@@ -37,8 +37,8 @@ import os
 
 CONF_PATH = '/opt/nginx/nginx.conf'
 
-streaming_engine_int = os.environ['STREAMING_ENGINE_INT']
-streaming_engine_ext = os.environ['STREAMING_ENGINE_EXT']
+# streaming_engine_int = os.environ['STREAMING_ENGINE_INT']
+# streaming_engine_ext = os.environ['STREAMING_ENGINE_EXT']
 
 app = Flask(__name__)
 
@@ -55,7 +55,6 @@ def register_camera():
 
     data["cameras"].append({
         "name": camera_name,
-        "push": 0,
         "streamingEngines": []
     })
 
@@ -65,10 +64,9 @@ def register_camera():
     update_nginx(data)
 
     response = {}
-    response["code"] = 200
-    response["type"] = "?"
-    response["message"] = "TODO"
-
+    #response["code"] = 200
+    #response["type"] = "?"
+    response["endpoint"] = "rtmp://10.100.32.240:1935/"+camera_name+"/"+camera_name
     return json.dumps(response, sort_keys=False)
 
 """This function adds a push statement in the specific app"""
@@ -77,16 +75,15 @@ def get_stream():
     input_json = request.get_json()
 
     stream_app = input_json["name"]
-    stream_engine_IP = streaming_engine_int
-    stream_engine_IP_ext = streaming_engine_ext
+    streaming_engine_IP = input_json["se_ip"]
+    streaming_engine_IP = streaming_engine_IP.split(':')[0]
 
     with open("conf.json") as conf_json:
         data = json.load(conf_json)
 
     for camera in data['cameras']:
         if camera['name'] == stream_app:
-            camera['push'] =+ 1
-            camera['streamingEngines'].append(stream_engine_IP)
+            camera['streamingEngines'].append(streaming_engine_IP)
 
     with open("conf.json", "w") as conf_json:
         json.dump(data, conf_json)
@@ -94,9 +91,9 @@ def get_stream():
     update_nginx(data)
 
     response = {}
-    response["code"] = 200
-    response["type"] = "?"
-    response["url"] = "http://"+stream_engine_IP_ext+":8080/hls/"+stream_app+".m3u8"
+    #response["code"] = 200
+    #response["type"] = "?"
+    response["url"] = "http://"+streaming_engine_IP+":8080/hls/"+stream_app+".m3u8"
 
     return json.dumps(response, sort_keys=False)
 

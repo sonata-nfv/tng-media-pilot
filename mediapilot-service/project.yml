@@ -4,7 +4,7 @@ version: '0.5'
 package:
   vendor: "eu.5gtango"
   name: "ns-mediapilot-service"
-  version: "0.1"
+  version: "0.3"
   maintainer: "Ignacio Dominguez"
   description: "This is the 5GTANGO network service for the media pilot"
 files:
@@ -16,6 +16,8 @@ files:
     type: "application/vnd.5gtango.vnfd"
   - path: "Definitions/cms-vnf.yml"
     type: "application/vnd.5gtango.vnfd"
+#  - path: "Definitions/aggregator-stats-vnf.yml"
+#    type: "application/vnd.5gtango.vnfd"
   - path: "Icons/atos_logo.png"
     type: "image/png"
   - path: "Licenses/LICENSE"
