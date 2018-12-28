@@ -33,12 +33,8 @@
 ## partner consortium (www.5gtango.eu).
 
 from flask import Flask, request, json, render_template
-import os
 
 CONF_PATH = '/opt/nginx/nginx.conf'
-
-# streaming_engine_int = os.environ['STREAMING_ENGINE_INT']
-# streaming_engine_ext = os.environ['STREAMING_ENGINE_EXT']
 
 app = Flask(__name__)
 
@@ -64,9 +60,7 @@ def register_camera():
     update_nginx(data)
 
     response = {}
-    #response["code"] = 200
-    #response["type"] = "?"
-    response["endpoint"] = "rtmp://10.100.32.240:1935/"+camera_name+"/"+camera_name
+    response["endpoint"] = "rtmp://10.100.32.240:1935/"+camera_name+"/"+camera_name #TODO: Put the correct MA IP
     return json.dumps(response, sort_keys=False)
 
 """This function adds a push statement in the specific app"""
@@ -91,9 +85,7 @@ def get_stream():
     update_nginx(data)
 
     response = {}
-    #response["code"] = 200
-    #response["type"] = "?"
-    response["url"] = "http://"+streaming_engine_IP+":8080/hls/"+stream_app+".m3u8"
+    response["url"] = "http://"+streaming_engine_IP+":80/hls/"+stream_app+".m3u8"
 
     return json.dumps(response, sort_keys=False)
 
