@@ -7,7 +7,7 @@ ENV STREAMING_ENGINE_INT ""
 ENV STREAMING_ENGINE_EXT ""
 
 EXPOSE 1935
-EXPOSE 8080
+EXPOSE 80
 
 RUN mkdir -p /opt/data && mkdir /www
 
@@ -68,6 +68,8 @@ ADD static /www/static
 
 WORKDIR /app
 
+#Python dependencies:
+RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
 COPY . /app

@@ -1,7 +1,7 @@
 # media-streaming-engine
 
 This VNF implements the adaptive streaming algorithm, first transcodes 
-the video to different qualities and then generates the HLS manifest. 
+the video to different qualities and then generates the HLS manifest and video fragments. 
 
 It is built with Nginx compiled with the RTMP module. The transcoding 
 is implemented with ffmpeg.

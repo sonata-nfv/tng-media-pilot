@@ -15,7 +15,7 @@ virtual_deployment_units:
   - id: "vdu01"
     vm_image: "http://www.google.es"
     vm_image_format: "qcow2"
-    vm_image_md5: '982a7b82a9d5d01d97ddd277f686af1f'
+    vm_image_md5: '25378eab1148b48c0f7017c8dee58ae7'
     resource_requirements:
       cpu:
         vcpus: 1
@@ -32,10 +32,7 @@ virtual_deployment_units:
       - id: "external"
         interface: "ipv4"
         type: "external"
-      - id: "internal1"
-        interface: "ipv4"
-        type: "internal"
-      - id: "internal2"
+      - id: "internal"
         interface: "ipv4"
         type: "internal"
 
@@ -55,16 +52,11 @@ virtual_links:
     connection_points_reference:
       - "vdu01:external"
       - "cpexternal"
-  - id: "vlinternal1"
+  - id: "vlinternal"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vdu01:internal1"
-      - "cpinternal1"
-  - id: "vlinternal2"
-    connectivity_type: "E-Line"
-    connection_points_reference:
-      - "vdu01:internal2"
-      - "cpinternal2"
+      - "vdu01:internal"
+      - "cpinternal"
 
 # connectivity type
 # E-LAN = switch
@@ -81,10 +73,7 @@ connection_points:
   - id: "cpexternal"
     interface: "ipv4"
     type: "external"
-  - id: "cpinternal1"
-    interface: "ipv4"
-    type: "internal"
-  - id: "cpinternal2"
+  - id: "cpinternal"
     interface: "ipv4"
     type: "internal"
 

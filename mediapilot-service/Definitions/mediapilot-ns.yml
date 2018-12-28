@@ -2,7 +2,7 @@
 descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml
 vendor: "eu.sonata-nfv"
 name: "mediapilot-service"
-version: "0.1"
+version: "0.3"
 author: "Ignacio Dominguez @: atos"
 description: "This NS provides the video streaming service for the inmersive media pilot."
 
@@ -23,6 +23,10 @@ network_functions:
     vnf_vendor: "nuromedia"
     vnf_name: "cms-vnf"
     vnf_version: "0.1"
+#  - vnf_id: "vnf-aggregator-stats"
+#    vnf_vendor: "atos"
+#    vnf_name: "aggregator-stats-vnf"
+#    vnf_version: "0.1"
 
 ##
 ## The NS connection points to the
@@ -50,6 +54,7 @@ virtual_links:
       - "vnf-agregator:cpmgmt"
       - "vnf-streamingengine:cpmgmt"
       - "vnf-cms:cpmgmt"
+#      - "vnf-aggregator-stats:cpmgmt"
       - "nscpmgmt"
   - id: "vlexternal"
     connectivity_type: "E-LAN"
@@ -57,14 +62,13 @@ virtual_links:
       - "vnf-agregator:cpexternal"
       - "vnf-streamingengine:cpexternal"
       - "vnf-cms:cpexternal"
+#      - "vnf-aggregator-stats:cpexternal"
       - "nscpexternal"
-  - id: "cms-aggregator"
-    connectivity_type: "E-Line"
+  - id: "vlinternal"
+    connectivity_type: "E-LAN"
     connection_points_reference:
-      - "vnf-cms:cpinternal"
-      - "vnf-agregator:cpinternal1"
-  - id: "aggregator-mse"
-    connectivity_type: "E-Line"
-    connection_points_reference:
-      - "vnf-agregator:cpinternal2"
+      - "vnf-agregator:cpinternal"
       - "vnf-streamingengine:cpinternal"
+      - "vnf-cms:cpinternal"
+      #      - "vnf-aggregator-stats:cpexternal"
+      - "nscpinternal"
