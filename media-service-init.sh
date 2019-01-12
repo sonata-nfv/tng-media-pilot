@@ -28,7 +28,7 @@ curl -H'content-Type:application/json' -X POST -d'{
             "ip": "192.168.137.152:1935"
         }
     ]
-}' http://192.168.137.150:50000/configure
+}' http://192.168.137.152:50000/configure
 
 #Register a camera:
 curl -H 'content-Type: application/json' -X POST -d '{"name":"cam1"}' http://192.168.137.152:50000/registerCamera
