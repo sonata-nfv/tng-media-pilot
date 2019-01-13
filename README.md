@@ -19,6 +19,8 @@ a seamless experience to the end user on a VR or non-VR device.
 | `emulators` | Source and Dockerfiles of the CPE/CCE |
 | `images` | images |
 | `mediapilot-service` | Service descriptors |
+| `kubernetes` | Service descriptors for kubernetes deployment |
+| `fsm` | FSM scripts |
 | `video-test`| Service test descriptors |
 | `vnfs` | Source, Dockerfiles and other files of the VNFs |
 
