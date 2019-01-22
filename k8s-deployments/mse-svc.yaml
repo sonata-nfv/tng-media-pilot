@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2018-12-26T10:16:30Z
+  name: service-84c3c79f-80c3-45ba-a179-43d8dbe520ea
+  namespace: default
+  resourceVersion: "5300753"
+  selfLink: /api/v1/namespaces/default/services/service-84c3c79f-80c3-45ba-a179-43d8dbe520ea
+  uid: 4fe5b33d-08f7-11e9-978e-54b2030b7752
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: rtmp
+    nodePort: 30307
+    port: 1935
+    protocol: TCP
+    targetPort: 1935
+  - name: hls
+    nodePort: 31289
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    deployment: cdu01-84c3c79f-80c3-45ba-a179-43d8dbe520ea
+  sessionAffinity: None
+  type: LoadBalancer
+

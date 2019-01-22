@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: 2018-12-26T10:16:19Z
+  generation: 1
+  labels:
+    deployment: cdu01-96526bd3-430d-4cb4-9f63-19c46e296c0a
+  name: 96526bd3-430d-4cb4-9f63-19c46e296c0a
+  namespace: default
+  resourceVersion: "7101824"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/96526bd3-430d-4cb4-9f63-19c46e296c0a
+  uid: 49acc782-08f7-11e9-978e-54b2030b7752
+spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      deployment: cdu01-96526bd3-430d-4cb4-9f63-19c46e296c0a
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        deployment: cdu01-96526bd3-430d-4cb4-9f63-19c46e296c0a
+    spec:
+      containers:
+      - image: ignaciodomin/media-aggregator:dev
+        imagePullPolicy: IfNotPresent
+        name: cdu01-96526bd3-430d-4cb4-9f63-19c46e296c0a
+        ports:
+        - containerPort: 1935
+          name: int-rtmp
+          protocol: TCP
+        - containerPort: 5000
+          name: int-api
+          protocol: TCP
+        - containerPort: 80
+          name: int-stats
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
