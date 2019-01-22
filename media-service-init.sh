@@ -28,7 +28,9 @@ curl -H'content-Type:application/json' -X POST -d'{
             "ip": "'"$MSE"'"
     	}
     ]
+
 }' http://$CMS/configure
+
 
 #Register a camera:
 curl -H 'content-Type: application/json' -X POST -d '{"name":"cam1"}' http://$CMS/registerCamera
