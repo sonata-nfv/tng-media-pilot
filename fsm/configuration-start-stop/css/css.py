@@ -168,7 +168,7 @@ class CssFSM(sonSMbase):
         """
 
         # The config event receives a list if IP addresses of backends. The
-        # load needs to be balanced among these IP addreses.
+        # load needs to be balanced among these IP addresses.
         LOG.info(str(content))
 
         # TODO: Parse the yaml and create the json payload for the CMS
