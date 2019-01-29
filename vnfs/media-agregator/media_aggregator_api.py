@@ -34,6 +34,8 @@
 
 from flask import Flask, request, json, render_template
 
+import http.client, xmltodict
+
 CONF_PATH = '/opt/nginx/nginx.conf'
 
 app = Flask(__name__)
@@ -88,6 +90,26 @@ def get_stream():
     response["url"] = "http://"+streaming_engine_IP+":80/hls/"+stream_app+".m3u8"
 
     return json.dumps(response, sort_keys=False)
+
+"""This function reads the Nginx statistics and parses them to json format"""
+@app.route("/stats", methods=["GET"])
+def stats():
+    ip = "localhost"
+    port = "80"
+    path = "/static/stat.xsl"
+
+    conn = http.client.HTTPConnection(ip, port)
+
+    conn.request("GET", path)
+    response = conn.getresponse()
+    data = response.read()
+    conn.close()
+
+    data = data.decode("utf-8")
+
+    dic = xmltodict.parse(data)
+
+    return json.dumps(dic, sort_keys=False)
 
 def update_nginx(data):
     conf = open(CONF_PATH, 'r+')
