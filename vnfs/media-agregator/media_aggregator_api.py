@@ -34,7 +34,7 @@
 
 from flask import Flask, request, json, render_template
 
-import http.client, xmltodict
+import http.client, xmltodict, os
 
 CONF_PATH = '/opt/nginx/nginx.conf'
 
@@ -114,6 +114,7 @@ def stats():
     #dic = xmltodict.parse(data)
 
     o_dic = {}
+    o_dic["container_id"] = os.getenv("HOSTNAME")
     o_dic["bw_in"] = dic['rtmp']['bw_in']
     o_dic["bw_out"] = dic['rtmp']['bw_out']
 
