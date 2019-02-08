@@ -9,7 +9,7 @@ metadata:
     deployment: cdu01-cb79856b-95c5-41c8-9881-2e8b6b25aa1f
   name: cb79856b-95c5-41c8-9881-2e8b6b25aa1f
   namespace: default
-  resourceVersion: "7101804"
+  resourceVersion: "7101802"
   selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/cb79856b-95c5-41c8-9881-2e8b6b25aa1f
   uid: 500105c6-08f7-11e9-978e-54b2030b7752
 spec:

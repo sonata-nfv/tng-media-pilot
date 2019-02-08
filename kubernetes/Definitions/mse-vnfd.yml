@@ -3,18 +3,20 @@ descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/mast
 
 vendor: "eu.5gtango"
 name: "mse-vnfd"
-version: "0.1"
+version: "0.2"
 author: "Ignacio Dominguez"
 description: "Media-streaming-engine VNF descriptor."
 
 cloudnative_deployment_units:
   - id: "cdu01"
-    image: ignaciodomin/media-streaming-engine:demo1
+    image: ignaciodomin/media-streaming-engine:dev
     connection_points:
       - id: "int-rtmp"
         port: 1935
       - id: "int-hls"
         port: 80
+      - id: "int-api"
+        port: 5000
     parameters:                 # (optional)
         k8s_deployment:
           key1: value2
@@ -31,6 +33,10 @@ connection_points:
     interface: "ipv4"
     type: "serviceendpoint"
     port: 80
+  - id: "api"
+    interface: "ipv4"
+    type: "serviceendpoint"
+    port: 5000
   
 
 # CNFs only use E-Tree links to map external ports to internal ports
@@ -45,3 +51,8 @@ virtual_links:
     connection_points_reference:
       - "hls"
       - "cdu01:int-hls"
+  - id: "api-link"
+    connectivity_type: "E-Tree"
+    connection_points_reference:
+      - "api"
+      - "cdu01:int-api"
