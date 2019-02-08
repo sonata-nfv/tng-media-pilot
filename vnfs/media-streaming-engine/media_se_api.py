@@ -36,60 +36,8 @@ from flask import Flask, request, json, render_template
 
 import http.client, xmltodict, os
 
-CONF_PATH = '/opt/nginx/nginx.conf'
-
 app = Flask(__name__)
 
-
-"""This function creates an app in the nginx.conf for the new camera"""
-@app.route("/registerCamera", methods=["POST"])
-def register_camera():
-    input_json = request.get_json()
-
-    camera_name = input_json['name']
-
-    with open("conf.json") as conf_json:
-        data = json.load(conf_json)
-
-    data["cameras"].append({
-        "name": camera_name,
-        "streamingEngines": []
-    })
-
-    with open("conf.json", "w") as conf_json:
-        json.dump(data, conf_json)
-
-    update_nginx(data)
-
-    response = {}
-    response["endpoint"] = "rtmp://10.100.32.240:1935/"+camera_name+"/"+camera_name #TODO: Put the correct MA IP
-    return json.dumps(response, sort_keys=False)
-
-"""This function adds a push statement in the specific app"""
-@app.route("/getStream", methods=["GET"])
-def get_stream():
-    input_json = request.get_json()
-
-    stream_app = input_json["name"]
-    streaming_engine_IP = input_json["se_ip"]
-    streaming_engine_IP = streaming_engine_IP.split(':')[0]
-
-    with open("conf.json") as conf_json:
-        data = json.load(conf_json)
-
-    for camera in data['cameras']:
-        if camera['name'] == stream_app:
-            camera['streamingEngines'].append(streaming_engine_IP)
-
-    with open("conf.json", "w") as conf_json:
-        json.dump(data, conf_json)
-
-    update_nginx(data)
-
-    response = {}
-    response["url"] = "http://"+streaming_engine_IP+":80/hls/"+stream_app+".m3u8"
-
-    return json.dumps(response, sort_keys=False)
 
 """This function reads the Nginx statistics and parses them to json format"""
 @app.route("/stats", methods=["GET"])
@@ -127,12 +75,6 @@ def stats():
 
     return json.dumps(o_dic, sort_keys=False)
 
-def update_nginx(data):
-    conf = open(CONF_PATH, 'r+')
-    conf.seek(0)
-    conf.write(render_template('nginx.conf', data=data))
-    conf.truncate()
-    conf.close()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

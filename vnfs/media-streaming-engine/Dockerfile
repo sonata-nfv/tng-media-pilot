@@ -1,5 +1,4 @@
 FROM alpine:3.4
-LABEL author Alfred Gutierrez <alf.g.jr@gmail.com>
 
 ENV NGINX_VERSION 1.13.12
 ENV NGINX_RTMP_VERSION 1.2.1
@@ -27,7 +26,9 @@ RUN	apk update && apk add --no-cache	\
   pcre-dev \
   pkgconf \
   pkgconfig \
-  zlib-dev
+  zlib-dev \
+  python3 \
+  python3-dev
 
 # Get nginx source.
 RUN cd /tmp && \
@@ -89,8 +90,19 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
 # Cleanup.
 RUN rm -rf /var/cache/* /tmp/*
 
+#Install API dependencies:
+COPY ./requirements.txt /app/requirements.txt
+
 # Add NGINX config and static files.
 ADD nginx.conf /opt/nginx/nginx.conf
-ADD static /static
+ADD static /www/static
 
-CMD ["/opt/nginx/sbin/nginx"]
+WORKDIR  /app
+
+#Python dependencies:
+RUN pip3 install --upgrade pip
+RUN pip3 install -r requirements.txt
+
+COPY . /app
+
+ENTRYPOINT [ "/app/entrypoint.sh" ]
