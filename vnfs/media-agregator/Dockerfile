@@ -1,8 +1,7 @@
 FROM alpine:3.4
 
-ENV NGINX_VERSION 1.13.9
+ENV NGINX_VERSION 1.13.12
 ENV NGINX_RTMP_VERSION 1.2.1
-ENV FFMPEG_VERSION 3.4.2
 
 EXPOSE 1935
 EXPOSE 80
@@ -10,7 +9,6 @@ EXPOSE 80
 RUN mkdir -p /opt/data && mkdir /www
 
 #Build dependencies:
-#TODO: optimize this dependencies
 RUN apk update && apk add \
   binutils \
   binutils-libs \
