@@ -57,10 +57,6 @@ def stats():
 
     dic = xmltodict.parse(data)
 
-    #data = "<rtmp><nginx_version>1.13.9</nginx_version><nginx_rtmp_version>1.1.4</nginx_rtmp_version><compiler>gcc 5.3.0 (Alpine 5.3.0) </compiler><built>Jan 28 2019 13:32:33</built><pid>31</pid><uptime>10127</uptime><naccepted>2</naccepted><bw_in>4396944</bw_in><bytes_in>4200348922</bytes_in><bw_out>4399488</bw_out><bytes_out>4203357710</bytes_out><server><application><name>360</name><live><stream><name>360</name><time>55644</time><bw_in>4393888</bw_in><bytes_in>27313047</bytes_in><bw_out>4393888</bw_out><bytes_out>27313047</bytes_out><bw_audio>140448</bw_audio><bw_video>4253440</bw_video><client><id>7</id><address>192.168.137.151/live/360</address><time>55644</time><flashver>ngx-local-relay</flashver><dropped>0</dropped><avsync>-15</avsync><timestamp>55263</timestamp><active/></client><client><id>6</id><address>10.32.0.1</address><time>55778</time><flashver>FMLE/3.0 (compatible; Lavf57.83</flashver><dropped>0</dropped><avsync>-15</avsync><timestamp>55263</timestamp><publishing/><active/></client><meta><video><width>2048</width><height>1024</height><frame_rate>25</frame_rate><codec>Sorenson-H263</codec></video><audio><codec>MP3</codec><channels>2</channels><sample_rate>44100</sample_rate></audio></meta><nclients>2</nclients><publishing/><active/></stream><nclients>2</nclients></live></application><application><name>plane</name><live><nclients>0</nclients></live></application></server></rtmp>"
-
-    #dic = xmltodict.parse(data)
-
     o_dic = {}
     o_dic["container_id"] = os.getenv("HOSTNAME")
     o_dic["bw_in"] = dic['rtmp']['bw_in']
@@ -68,10 +64,11 @@ def stats():
 
     #Check the number of input connections:
     input_conn = 0
-    for app in dic['rtmp']['server']['application']:
+    if dic['rtmp'].get('server'):
+        for app in dic['rtmp']['server']['application']:
             input_conn = input_conn+1
 
-    o_dic["input_conn"] = input_conn
+        o_dic["input_conn"] = input_conn
 
     return json.dumps(o_dic, sort_keys=False)
 

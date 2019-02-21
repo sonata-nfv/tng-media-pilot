@@ -37,7 +37,6 @@ connection_points:
     interface: "ipv4"
     type: "serviceendpoint"
     port: 5000
-  
 
 # CNFs only use E-Tree links to map external ports to internal ports
 virtual_links:
