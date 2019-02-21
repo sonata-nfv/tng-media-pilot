@@ -7,17 +7,23 @@ node when needed.
 
 ## Container details 
 The media-aggregator is deployed on a docker container which contains an
-Nginx server compiled with the RTMP-module, some Python scripts for the API
-and stats extraction and also a simple inotifier script. 
+Nginx server compiled with the RTMP-module, a Python script for the API 
+and also a simple inotifier script. 
 * Nginx + RTMP module: The main part of the container is an Nginx server
 compiled with the RTMP-module. This module manages RTMP video streams. 
-* Pythons scripts: 
-    * ```media_aggregator_api.py```: This Python script contains the media-aggregator
-    API which communicates with the media-content-manager.
-    * ```stats_extractor.py```: This script retrieves some stats from Nginx.
+* ```media_aggregator_api.py```: This Python script contains the media-aggregator
+API which communicates with the media-content-manager.
 * ```nginx_notifier.sh```: this script is watching for changes in nginx.conf, when 
 there are changes, the script reloads the configuration of Nginx 
 without stopping the service.
+
+The container has two open ports for the different functions: 
+
+| Port | function |
+| --- | --- |
+| `1935` | RTMP default port |
+| `5000` | API port |
+
 
 ## Nginx configuration
 The most important part of the configuration file is the rtmp server part. 
@@ -64,7 +70,9 @@ This method creates a new application inside Nginx where the camera can send the
 
 The API will add the application into the nginx.conf file and reloads that configuration automatically without stop the service. 
 
-The response will be the following: ????
+The response will be the following:
+
+    TBC
 
 Here is an example call for this method:
 
@@ -77,13 +85,27 @@ This method will add a push order in the nginx configuration file. This push ord
 		"name": "name_of_the_camera",
 	}
     
-The response will be the following: ????
+The response will be the following:
+
+    TBC
 
 Here is an example call:
 
     curl -H 'content-Type: application/json' -X GET -d '{"name":"name_of_the_camera"}' http://[IP_of_the_aggregator]:5000/getStream
 
+### stats
+This method collects the stats from the Nginx server. It is called with:
+        
+    curl -H 'content-Type: application/json' -X GET [IP_of_the_aggregator]:5000/stats    
 
+Here there is an example of the response:
+
+    {
+        "resource_id": "smpilot-cccdu01-c9dbdeff-c50b-4ead-a6e6-9afdc3012334",
+        "bw_in":"4396944",
+        "bw_out":"4399488",
+        "input_conn":2
+    }
 
     
 

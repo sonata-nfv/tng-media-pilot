@@ -19,6 +19,7 @@ a seamless experience to the end user on a VR or non-VR device.
 | `emulators` | Source and Dockerfiles of the CPE/CCE |
 | `fsm` | FSM scripts |
 | `images` | images |
+| `k8s-deployments` | Deployment and service yaml for local service deployment |
 | `kubernetes` | Service descriptors for kubernetes deployment |
 | `mediapilot-service` | Service descriptors |
 | `video-test`| Service test descriptors |
