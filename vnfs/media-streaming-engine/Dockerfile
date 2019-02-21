@@ -6,6 +6,7 @@ ENV FFMPEG_VERSION 4.1
 
 EXPOSE 1935
 EXPOSE 80
+EXPOSE 5000
 
 RUN mkdir -p /opt/data && mkdir /www
 
