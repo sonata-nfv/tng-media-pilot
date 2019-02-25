@@ -58,7 +58,7 @@ def stats():
     dic = xmltodict.parse(data)
 
     o_dic = {}
-    o_dic["container_id"] = os.getenv("HOSTNAME")
+    o_dic["resource_id"] = os.getenv("HOSTNAME")
     o_dic["bw_in"] = dic['rtmp']['bw_in']
     o_dic["bw_out"] = dic['rtmp']['bw_out']
 
