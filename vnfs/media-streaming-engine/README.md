@@ -22,7 +22,7 @@ segments and the HLS playlist are generated.
 * ```media_aggregator_api.py```: This Python script contains the media-streaming-engine
 API which serves the stats to the monitoring probe.
 
-The container has two open ports for the different functions: 
+The container has three open ports for the different functions: 
 
 | Port | function |
 | --- | --- |
