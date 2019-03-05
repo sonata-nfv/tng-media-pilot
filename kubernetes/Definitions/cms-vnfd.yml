@@ -8,7 +8,7 @@ author: "Ignacio Dominguez"
 description: "Media-cms VNF descriptor."
 
 cloudnative_deployment_units:
-  - id: "cdu01"
+  - id: "cndu01"
     image: vastor80/5gtango:latest
     connection_points:
       - id: "int-api"
@@ -32,4 +32,4 @@ virtual_links:
     connectivity_type: "E-Tree"
     connection_points_reference:
       - "api"
-      - "cdu01:int-api"
+      - "cndu01:int-api"

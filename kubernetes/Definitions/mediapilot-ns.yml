@@ -29,9 +29,6 @@ network_functions:
 ## outside world.
 ##
 connection_points:
-  - id: "nscpmgmt"
-    interface: "ipv4"
-    type: "management"
   - id: "nscpexternal"
     interface: "ipv4"
     type: "external"
@@ -44,27 +41,20 @@ testing_tags:
 ## the different connections points.
 ##
 virtual_links:
-  - id: "vlmgmt"
-    connectivity_type: "E-LAN"
-    connection_points_reference:
-      - "vnf-ma:cpmgmt"
-      - "vnf-mse:cpmgmt"
-      - "vnf-cms:cpmgmt"
-      - "nscpmgmt"
   - id: "vlexternal"
     connectivity_type: "E-LAN"
     connection_points_reference:
-      - "vnf-ma:cpexternal"
-      - "vnf-mse:cpexternal"
-      - "vnf-cms:cpexternal"
+      - "vnf-ma:rtmp"
+      - "vnf-mse:hls"
+      - "vnf-cms:api"
       - "nscpexternal"
   - id: "cms-aggregator"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vnf-cms:cpinternal"
-      - "vnf-ma:cpinternal1"
+      - "vnf-cms:api"
+      - "vnf-ma:api"
   - id: "aggregator-mse"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vnf-ma:cpinternal2"
-      - "vnf-mse:cpinternal"
+      - "vnf-ma:rtmp"
+      - "vnf-mse:rtmp"
