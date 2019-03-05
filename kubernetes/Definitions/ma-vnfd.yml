@@ -8,19 +8,14 @@ author: "Ignacio Dominguez"
 description: "Media-aggregator VNF descriptor."
 
 cloudnative_deployment_units:
-  - id: "cdu01"
+  - id: "cndu01"
     image: ignaciodomin/media-aggregator:dev
     connection_points:
       - id: "int-rtmp"
         port: 1935
       - id: "int-api"
         port: 5000
-    parameters:                 # (optional)
-        k8s_deployment:
-          key1: value2
-        k8s_service:
-          keyA: valueB
-      
+
 # VNF connection points to the outside world
 connection_points:
   - id: "rtmp"
@@ -32,16 +27,15 @@ connection_points:
     type: "serviceendpoint"
     port: 5000
 
-
 # CNFs only use E-Tree links to map external ports to internal ports
 virtual_links:
   - id: "rtmp-link"
     connectivity_type: "E-Tree"
     connection_points_reference:
       - "rtmp"
-      - "cdu01:int-rtmp"
+      - "cndu01:int-rtmp"
   - id: "api-link"
     connectivity_type: "E-Tree"
     connection_points_reference:
       - "api"
-      - "cdu01:int-api"
+      - "cndu01:int-api"
