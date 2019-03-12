@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 #Variables with the IPs of the aggregator, streaming engine and cms:
-MA="10.0.2.241:5000"
-MSE="10.0.2.242:1935"
-CMS="10.0.2.240:50000"
+MA="192.168.185.83:5000"
+MSE="192.168.185.89:1935"
+CMS="192.168.185.87:50000"
 
 #MEDIA SERVICE CONFIGURATION:
 #Service init config API (emulates the FSM function)

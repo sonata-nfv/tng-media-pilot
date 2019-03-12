@@ -32,6 +32,7 @@ import yaml
 import json
 import requests
 import time
+import socket
 import configparser
 from sonsmbase.smbase import sonSMbase
 from .ssh import Client
@@ -50,9 +51,8 @@ LOG.setLevel(logging.DEBUG)
 logging.getLogger("son-mano-base:messaging").setLevel(logging.INFO)
 
 
-class CssFSM(sonSMbase):
+class CmsFSM(sonSMbase):
     
-    hostIp = 'none'
     def __init__(self):
 
         """
@@ -71,23 +71,12 @@ class CssFSM(sonSMbase):
         :param description: description
         """
 
-        self.specific_manager_type = 'fsm'
-        self.service_name = 'cms'
-        self.function_name = 'cms'
-        self.specific_manager_name = 'css'
-        self.num_lb = 0
-        self.old_ips = []
-        self.id_number = '1'
-        self.version = 'v0.1'
-        self.description = "An FSM that configures the CMS with the MAs and MSEs deployed."
+        self.sm_id = "sonfsmimmersive-media-pilotds-vnfcms1"
+        self.sm_version = "0.1"
 
-        super(self.__class__, self).__init__(specific_manager_type=self.specific_manager_type,
-                                             service_name=self.service_name,
-                                             function_name=self.function_name,
-                                             specific_manager_name=self.specific_manager_name,
-                                             id_number=self.id_number,
-                                             version=self.version,
-                                             description=self.description)
+        super(self.__class__, self).__init__(sm_id=self.sm_id,
+                                             sm_version=self.sm_version,
+                                             connect_to_broker=connect_to_broker)
 
     def on_registration_ok(self):
 
@@ -152,73 +141,30 @@ class CssFSM(sonSMbase):
         This method handles a start event.
         """
 
-        self.vnfr = content['vnfr']
-        self.mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'][0]['connection_points'][0]['interface']['address']
-        LOG.info('mgmt_ip: ' + str(self.mgmt_ip))
-
-        # Create a response for the FLM
-        response = {}
-        response['status'] = 'COMPLETED'
-
+        # Dummy content
+        response = {'status': 'completed'}
         return response
+
+    def stop_event(self, content):
+        """
+        This method handles a stop event.
+        """
+
+        # Dummy content
+        response = {'status': 'completed'}
+
+    return response
 
     def configure_event(self, content):
         """
         This method handles a configure event.
         """
 
-        # The config event receives a list if IP addresses of backends. The
-        # load needs to be balanced among these IP addresses.
-        LOG.info(str(content))
-
-        # TODO: Parse the yaml and create the json payload for the CMS
-
-        payload = {}
-        payload['name'] = 'squid'
-        payload['port'] = 80
-        payload['backends'] = []
-
-        counter = 1
-        for backend in content['ips']:
-            new_backend = {}
-            new_backend['name'] = 'vnf' + str(counter)
-            new_backend['host'] = backend
-            new_backend['port'] = 3128
-            payload['backends'].append(new_backend)
-            counter = counter + 1
-
-        wrapper = []
-        wrapper.append(payload)
-
-        LOG.info('message for haproxy: ' + str(wrapper))
-        LOG.info(json.dumps(wrapper))
-
-        header = {'Content-Type': 'application/json'}
-        url = 'http://' + content['mgmt_ip'] + ':5000/'
-
-        i = 1
-        while i < 25:
-            try:
-                post = requests.post(url,
-                                     data=json.dumps(wrapper),
-                                     headers=header,
-                                     timeout=5.0)
-                LOG.info(str(post.status_code))
-                LOG.info(str(post.text))
-                break
-            except:
-                LOG.info("Retry, current attempt: " + str(i))
-                i = i + 1
-                time.sleep(10)
-
-        response = {}
-        response['status'] = 'COMPLETED'
-        LOG.info("Response message: " + str(response))
-        return response
+        #TODO: Parse the IPs of the MA and MSE in the content and make the /configure call
 
 
 def main():
-    CssFSM()
+    CmsFSM()
 
 if __name__ == '__main__':
     main()

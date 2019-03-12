@@ -16,8 +16,6 @@ files:
     type: "application/vnd.5gtango.vnfd"
   - path: "Definitions/cms-vnf.yml"
     type: "application/vnd.5gtango.vnfd"
-#  - path: "Definitions/aggregator-stats-vnf.yml"
-#    type: "application/vnd.5gtango.vnfd"
   - path: "Icons/atos_logo.png"
     type: "image/png"
   - path: "Licenses/LICENSE"

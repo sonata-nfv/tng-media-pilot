@@ -23,10 +23,6 @@ network_functions:
     vnf_vendor: "nuromedia"
     vnf_name: "cms-vnf"
     vnf_version: "0.1"
-#  - vnf_id: "vnf-aggregator-stats"
-#    vnf_vendor: "atos"
-#    vnf_name: "aggregator-stats-vnf"
-#    vnf_version: "0.1"
 
 ##
 ## The NS connection points to the
@@ -54,7 +50,6 @@ virtual_links:
       - "vnf-agregator:cpmgmt"
       - "vnf-streamingengine:cpmgmt"
       - "vnf-cms:cpmgmt"
-#      - "vnf-aggregator-stats:cpmgmt"
       - "nscpmgmt"
   - id: "vlexternal"
     connectivity_type: "E-LAN"
@@ -62,7 +57,6 @@ virtual_links:
       - "vnf-agregator:cpexternal"
       - "vnf-streamingengine:cpexternal"
       - "vnf-cms:cpexternal"
-#      - "vnf-aggregator-stats:cpexternal"
       - "nscpexternal"
   - id: "vlinternal"
     connectivity_type: "E-LAN"
@@ -70,5 +64,4 @@ virtual_links:
       - "vnf-agregator:cpinternal"
       - "vnf-streamingengine:cpinternal"
       - "vnf-cms:cpinternal"
-      #      - "vnf-aggregator-stats:cpexternal"
       - "nscpinternal"

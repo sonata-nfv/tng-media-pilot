@@ -34,7 +34,7 @@
 
 from flask import Flask, request, json, render_template
 
-import http.client, xmltodict, os
+import http.client, xmltodict, os, uuid
 
 CONF_PATH = '/opt/nginx/nginx.conf'
 
@@ -62,7 +62,9 @@ def register_camera():
     update_nginx(data)
 
     response = {}
+    response["uuid"] = str(uuid.uuid4())
     response["endpoint"] = "rtmp://10.100.32.240:1935/"+camera_name+"/"+camera_name #TODO: Put the correct MA IP
+
     return json.dumps(response, sort_keys=False)
 
 """This function adds a push statement in the specific app"""

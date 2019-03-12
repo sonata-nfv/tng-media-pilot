@@ -39,22 +39,22 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='css',
+    name='immedia',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
     version='v0.1',
 
-    description='configuration-start-stop FSM',
+    description='Immersive Media Pilot SSM',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/sonata-nfv/son-sm/tree/master/son-fsm-examples',
+    #url='https://github.com/sonata-nfv/son-sm/tree/master/son-ssm-examples',
 
     # Author details
-    author='',
-    author_email='',
+    author='Ignacio Dominguez',
+    author_email='ignacio.dominguez@atos.net',
 
     # Choose your license
     license='Apache 2.0',
@@ -62,14 +62,14 @@ setup(
     # What does your project relate to?
     keywords='NFV orchestrator',
 
-    packages=find_packages("css"),
-    install_requires=['pika', 'pytest','requests','netaddr','configparser'],
-    setup_requires=['pytest-runner'],
+    packages=find_packages("immedia"),
+    install_requires=[],
+    setup_requires=[],
 
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
-        'console_scripts': ['css=css.__main__:main'],
+        'console_scripts': ['immedia=immedia.__main__:main'],
     },
 )

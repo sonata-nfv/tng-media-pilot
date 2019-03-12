@@ -1,8 +1,8 @@
-from css import css
+from immedia import immedia
 
 
 def main():
-    css.main()
+    immedia.main()
 
 if __name__ == '__main__':
     main()

@@ -25,16 +25,19 @@ MAINTAINER SONATA
 RUN apt-get update && apt-get install -y python-pip ssh && \
 pip install paramiko
 RUN apt-get install python2.7
+RUN apt-get install -y net-tools iproute2 iputils-ping
+
 
 # configrurations
-ENV mongo_host mongo
-ENV mongo_port 27017
+#ENV mongo_host mongo
+#ENV mongo_port 27017
 ENV broker_host amqp://guest:guest@broker:5672/%2F
 ENV broker_exchange son-kernel
 
-ADD son-sm/son-mano-framework/son-mano-base /son-mano-base
-ADD son-sm/son-sm-template /son-sm-template
+#ADD son-sm/son-mano-framework/son-mano-base /son-mano-base
+#ADD son-sm/son-sm-template /son-sm-template
 
+ADD cms-fsm /root
 
 WORKDIR /son-mano-base
 Run python setup.py install
@@ -42,11 +45,11 @@ Run python setup.py install
 WORKDIR /son-sm-template
 RUN python setup.py install
 
-WORKDIR /
-ADD fsm/haproxy/configuration-start-stop /configuration-start-stop
+#WORKDIR /
+#ADD fsm/haproxy/configuration-start-stop /configuration-start-stop
 
-WORKDIR /configuration-start-stop
+WORKDIR /root
 RUN python setup.py develop
 
-CMD ["css"]
+CMD ["cms"]
 
