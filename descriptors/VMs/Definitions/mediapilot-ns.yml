@@ -1,0 +1,67 @@
+#descriptor_version: "1.0"
+descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml
+vendor: "eu.sonata-nfv"
+name: "mediapilot-service"
+version: "0.3"
+author: "Ignacio Dominguez @: atos"
+description: "This NS provides the video streaming service for the inmersive media pilot."
+
+##
+## The various network functions this service
+## is composed of.
+##
+network_functions: 
+  - vnf_id: "vnf-agregator"
+    vnf_vendor: "atos"
+    vnf_name: "agregator-vnf"
+    vnf_version: "0.1"
+  - vnf_id: "vnf-streamingengine"
+    vnf_vendor: "atos"
+    vnf_name: "streamingengine-vnf"
+    vnf_version: "0.1"
+  - vnf_id: "vnf-cms"
+    vnf_vendor: "nuromedia"
+    vnf_name: "cms-vnf"
+    vnf_version: "0.1"
+
+##
+## The NS connection points to the
+## outside world.
+##
+connection_points:
+  - id: "nscpmgmt"
+    interface: "ipv4"
+    type: "management"
+  - id: "nscpexternal"
+    interface: "ipv4"
+    type: "external"
+
+testing_tags: 
+  - http
+
+##
+## The virtual links that interconnect
+## the different connections points.
+##
+virtual_links:
+  - id: "vlmgmt"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vnf-agregator:cpmgmt"
+      - "vnf-streamingengine:cpmgmt"
+      - "vnf-cms:cpmgmt"
+      - "nscpmgmt"
+  - id: "vlexternal"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vnf-agregator:cpexternal"
+      - "vnf-streamingengine:cpexternal"
+      - "vnf-cms:cpexternal"
+      - "nscpexternal"
+  - id: "vlinternal"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vnf-agregator:cpinternal"
+      - "vnf-streamingengine:cpinternal"
+      - "vnf-cms:cpinternal"
+      - "nscpinternal"
