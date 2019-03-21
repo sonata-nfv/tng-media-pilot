@@ -13,15 +13,15 @@ description: "This NS provides the video streaming service for the immersive med
 network_functions: 
   - vnf_id: "vnf-ma"
     vnf_vendor: "eu.5gtango"
-    vnf_name: "ma-vnfd"
+    vnf_name: "ma-vnfd-h"
     vnf_version: "0.2"
   - vnf_id: "vnf-mse"
     vnf_vendor: "eu.5gtango"
-    vnf_name: "mse-vnfd"
+    vnf_name: "mse-vnfd-h"
     vnf_version: "0.2"
   - vnf_id: "vnf-cms"
     vnf_vendor: "eu.5gtango"
-    vnf_name: "cms-vnfd"
+    vnf_name: "cms-vnfd-h"
     vnf_version: "0.1"
 
 ##
