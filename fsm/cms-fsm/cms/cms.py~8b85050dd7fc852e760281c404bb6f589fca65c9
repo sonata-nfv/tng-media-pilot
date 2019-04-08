@@ -1,5 +1,5 @@
 """
-Copyright (c) 2015 SONATA-NFV
+Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO
 ALL RIGHTS RESERVED.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-Neither the name of the SONATA-NFV [, ANY ADDITIONAL AFFILIATION]
+Neither the name of the SONATA-NFV, 5GTANGO
 nor the names of its contributors may be used to endorse or promote
 products derived from this software without specific prior written
 permission.
@@ -24,36 +24,31 @@ funded by the European Commission under Grant number 671517 through
 the Horizon 2020 and 5G-PPP programmes. The authors would like to
 acknowledge the contributions of their colleagues of the SONATA
 partner consortium (www.sonata-nfv.eu).
+
+This work has been performed in the framework of the 5GTANGO project,
+funded by the European Commission under Grant number 761493 through
+the Horizon 2020 and 5G-PPP programmes. The authors would like to
+acknowledge the contributions of their colleagues of the 5GTANGO
+partner consortium (www.5gtango.eu).
 """
 
 import logging
-import os
 import yaml
-import json
-import requests
-import time
-import socket
-import configparser
-from sonsmbase.smbase import sonSMbase
-from .ssh import Client
-import netaddr
-
-
-def reverse(ip):
-        if len(ip) <= 1:
-                return ip
-        l = ip.split('.')
-        return '.'.join(l[::-1])
+from smbase.smbase import smbase
+try:
+    from cms import ssh
+except:
+    import ssh
 
 logging.basicConfig(level=logging.INFO)
-LOG = logging.getLogger("fsm-start-stop-configure")
+LOG = logging.getLogger("fsm-cms")
 LOG.setLevel(logging.DEBUG)
 logging.getLogger("son-mano-base:messaging").setLevel(logging.INFO)
 
 
-class CmsFSM(sonSMbase):
-    
-    def __init__(self):
+class cmsFSM(smbase):
+
+    def __init__(self, connect_to_broker=True):
 
         """
         :param specific_manager_type: specifies the type of specific manager
@@ -71,7 +66,7 @@ class CmsFSM(sonSMbase):
         :param description: description
         """
 
-        self.sm_id = "sonfsmimmersive-media-pilotds-vnfcms1"
+        self.sm_id = "cms"
         self.sm_version = "0.1"
 
         super(self.__class__, self).__init__(sm_id=self.sm_id,
@@ -81,11 +76,11 @@ class CmsFSM(sonSMbase):
     def on_registration_ok(self):
 
         # The fsm registration was successful
-        LOG.debug("Received registration ok event, FSM is running.")
+        LOG.debug("Received registration ok event.")
 
         # send the status to the SMR
         status = 'Subscribed, waiting for alert message'
-        message = {'name': self.specific_manager_id,
+        message = {'name': self.sm_id,
                    'status': status}
         self.manoconn.publish(topic='specific.manager.registry.ssm.status',
                               message=yaml.dump(message))
@@ -112,37 +107,46 @@ class CmsFSM(sonSMbase):
         response = None
 
         # the 'fsm_type' field in the content indicates for which type of
-        # fsm this message is intended. In this case, this FSM functions as
-        # start, stop and configure FSM
+        # fsm this message is intended.
         if str(request["fsm_type"]) == "start":
             LOG.info("Start event received: " + str(request["content"]))
             response = self.start_event(request["content"])
+
+        if str(request["fsm_type"]) == "stop":
+            LOG.info("Stop event received: " + str(request["content"]))
+            response = self.stop_event(request["content"])
 
         if str(request["fsm_type"]) == "configure":
             LOG.info("Config event received: " + str(request["content"]))
             response = self.configure_event(request["content"])
 
         # If a response message was generated, send it back to the FLM
-        if response is not None:
-            # Generated response for the FLM
-            LOG.info("Response to request generated:" + str(response))
-            topic = "generic.fsm." + str(self.sfuuid)
-            corr_id = props.correlation_id
-            self.manoconn.notify(topic,
-                                 yaml.dump(response),
-                                 correlation_id=corr_id)
-            return
-
-        # If response is None:
-        LOG.info("Request received for other type of FSM, ignoring...")
+        LOG.info("Response to request generated:" + str(response))
+        topic = "generic.fsm." + str(self.sfuuid)
+        corr_id = props.correlation_id
+        self.manoconn.notify(topic,
+                             yaml.dump(response),
+                             correlation_id=corr_id)
+        return
 
     def start_event(self, content):
         """
         This method handles a start event.
         """
+        LOG.info(str(content))
+        cdus = content['vnfd']['cloudnative_deployment_units']
 
-        # Dummy content
-        response = {'status': 'completed'}
+        # building envs dictionary
+        envs_list = []
+        for cdu in cdus:
+            env_sub = {}
+            env_sub['cdu_id'] = cdu['id']
+            env_sub['envs'] = {}
+            env_sub['envs']['foo'] = 'bar'
+            env_sub['envs']['dum'] = 'my'
+            envs_list.append(env_sub)
+
+        response = {'status': 'COMPLETED', 'envs':envs_list}
         return response
 
     def stop_event(self, content):
@@ -152,19 +156,20 @@ class CmsFSM(sonSMbase):
 
         # Dummy content
         response = {'status': 'completed'}
-
-    return response
+        return response
 
     def configure_event(self, content):
         """
         This method handles a configure event.
         """
 
-        #TODO: Parse the IPs of the MA and MSE in the content and make the /configure call
+        # Dummy content
+        response = {'status': 'completed'}
+        return response
 
 
 def main():
-    CmsFSM()
+    cmsFSM()
 
 if __name__ == '__main__':
     main()
