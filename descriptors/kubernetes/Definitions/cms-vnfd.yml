@@ -2,7 +2,7 @@
 descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml"
 
 vendor: "eu.5gtango"
-name: "vnf-cms"
+name: "cms-vnfd"
 version: "0.1"
 author: "Ignacio Dominguez"
 description: "Media-cms VNF descriptor."
@@ -33,3 +33,11 @@ virtual_links:
     connection_points_reference:
       - "api"
       - "cndu01:int-api"
+
+function_specific_managers:
+ - id: "cms"
+   description: "FSM to configure CMS"
+   image: "tsoenen/cms-fsm"
+   options:
+     - key: "type"
+       value: "start"

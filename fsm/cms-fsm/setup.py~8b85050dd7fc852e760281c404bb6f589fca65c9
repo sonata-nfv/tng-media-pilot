@@ -1,5 +1,5 @@
 """
-Copyright (c) 2015 SONATA-NFV
+Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO
 ALL RIGHTS RESERVED.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-Neither the name of the SONATA-NFV [, ANY ADDITIONAL AFFILIATION]
+Neither the name of the SONATA-NFV, 5GTANGO
 nor the names of its contributors may be used to endorse or promote
 products derived from this software without specific prior written
 permission.
@@ -24,6 +24,12 @@ funded by the European Commission under Grant number 671517 through
 the Horizon 2020 and 5G-PPP programmes. The authors would like to
 acknowledge the contributions of their colleagues of the SONATA
 partner consortium (www.sonata-nfv.eu).
+
+This work has been performed in the framework of the 5GTANGO project,
+funded by the European Commission under Grant number 761493 through
+the Horizon 2020 and 5G-PPP programmes. The authors would like to
+acknowledge the contributions of their colleagues of the 5GTANGO
+partner consortium (www.5gtango.eu).
 """
 
 # Always prefer setuptools over distutils
@@ -41,20 +47,14 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 setup(
     name='cms',
 
-    # Versions should comply with PEP440.  For a discussion on single-sourcing
-    # the version across setup.py and the project code, see
-    # https://packaging.python.org/en/latest/single_source_version.html
-    version='v0.1',
+    version='1.0',
 
-    description='Content Management System FSM',
+    description='SONATA FSM/SSM template',
     long_description=long_description,
 
-    # The project's main homepage.
-    #url='https://github.com/sonata-nfv/son-sm/tree/master/son-fsm-examples',
-
     # Author details
-    author='Ignacio Dominguez',
-    author_email='ignacio.dominguez@atos.net',
+    author='Thomas Soenen',
+    author_email='thomas.soenen@ugent.be',
 
     # Choose your license
     license='Apache 2.0',
@@ -66,10 +66,8 @@ setup(
     install_requires=[],
     setup_requires=[],
 
-    # To provide executable scripts, use entry points in preference to the
-    # "scripts" keyword. Entry points provide cross-platform support and allow
-    # pip to create the appropriate form of executable for the target platform.
     entry_points={
-        'console_scripts': ['css=css.__main__:main'],
+        'console_scripts': ['cms=cms.__main__:main'],
     },
+
 )
