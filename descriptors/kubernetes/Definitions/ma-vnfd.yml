@@ -1,4 +1,6 @@
----
+---treaming-engine   light               bdf4930ed4af        6 weeks ago         103MB
+ignaciodomin/media-aggregator         dev                 4a8a5ca22aa1        6 weeks ago         307MB
+
 descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml"
 
 vendor: "eu.5gtango"
