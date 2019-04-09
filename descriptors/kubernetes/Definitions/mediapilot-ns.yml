@@ -34,7 +34,7 @@ connection_points:
     type: "external"
 
 testing_tags: 
-  - http
+  - packetLossTest
 
 ##
 ## The virtual links that interconnect
