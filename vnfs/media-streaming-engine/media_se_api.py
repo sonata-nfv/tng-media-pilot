@@ -42,20 +42,7 @@ app = Flask(__name__)
 """This function reads the Nginx statistics and parses them to json format"""
 @app.route("/stats", methods=["GET"])
 def stats():
-    ip = "localhost"
-    port = "80"
-    path = "/static/stat.xsl"
-
-    conn = http.client.HTTPConnection(ip, port)
-
-    conn.request("GET", path)
-    response = conn.getresponse()
-    data = response.read()
-    conn.close()
-
-    data = data.decode("utf-8")
-
-    dic = xmltodict.parse(data)
+    dic = nginxStats()
 
     o_dic = {}
     o_dic["resource_id"] = os.getenv("HOSTNAME")
@@ -72,6 +59,42 @@ def stats():
 
     return json.dumps(o_dic, sort_keys=False)
 
+
+"""This function checks the availability of the VNF"""
+@app.route("/status", methods=["GET"])
+def status():
+    dic = nginxStats()
+
+    uptime = dic['rtmp']['uptime']
+
+    if uptime > 100:
+        status = "ok"
+    else:
+        status = "down"
+
+    response = {}
+    response["status"] = status
+
+    return json.dumps(response, sort_keys=False)
+
+
+def nginxStats():
+    ip = "localhost"
+    port = "80"
+    path = "/static/stat.xsl"
+
+    conn = http.client.HTTPConnection(ip, port)
+
+    conn.request("GET", path)
+    response = conn.getresponse()
+    data = response.read()
+    conn.close()
+
+    data = data.decode("utf-8")
+
+    dic = xmltodict.parse(data)
+
+    return dic
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
