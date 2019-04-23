@@ -10,7 +10,7 @@ service_platforms:
   - "SONATA"
 test_category:
   - "benchmarking"
-test_tags:
+testing_tags:
   - "rtmp-media-service"
 
 phases:
