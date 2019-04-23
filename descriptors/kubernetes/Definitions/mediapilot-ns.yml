@@ -26,7 +26,6 @@ network_functions:
   vnf_version: "0.1"
 
 testing_tags:
-  - "http"
   - "rtmp-media-service"
 
 virtual_links:
