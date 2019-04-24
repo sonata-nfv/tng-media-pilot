@@ -1,6 +1,13 @@
 FROM python:3.6-alpine
 
-WORKDIR /app
-COPY . /app
+RUN apk add --update \
+    py-pip\
+    && rm -rf /var/cache/apk/*
 
-CMD [ "python", "/app/parser.py" ]
+RUN pip install docker-compose
+
+ADD . /app/
+
+WORKDIR /app
+
+ENTRYPOINT [ "/app/entrypoint.sh" ]
