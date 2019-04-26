@@ -100,6 +100,8 @@ ADD static /www/static
 
 WORKDIR  /app
 
+RUN mkdir /opt/data/hls && chmod a+rwx /opt/data/hls
+
 #Python dependencies:
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt

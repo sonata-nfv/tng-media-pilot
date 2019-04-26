@@ -73,6 +73,7 @@ def status():
         status = "down"
 
     response = {}
+    response["resource_id"] = os.getenv("HOSTNAME")
     response["status"] = status
 
     return json.dumps(response, sort_keys=False)
