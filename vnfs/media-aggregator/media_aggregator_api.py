@@ -62,7 +62,7 @@ def register_camera():
     update_nginx(data)
 
     response = {}
-    response["uuid"] = str(uuid.uuid4())
+    #response["uuid"] = str(uuid.uuid4())
     response["endpoint"] = "rtmp://10.100.32.240:1935/"+camera_name+"/"+camera_name #TODO: Put the correct MA IP
 
     return json.dumps(response, sort_keys=False)
@@ -126,6 +126,7 @@ def status():
         status = "down"
 
     response = {}
+    response["resource_id"] = os.getenv("HOSTNAME")
     response["status"] = status
 
     return json.dumps(response, sort_keys=False)

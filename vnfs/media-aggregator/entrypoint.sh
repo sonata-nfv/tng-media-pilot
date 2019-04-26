@@ -2,7 +2,6 @@
 
 # Start the nginx process:
 /opt/nginx/sbin/nginx &
-#/var/lib/docker/volumes/my-vol/_data/nginx/sbin/nginx &
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start nginx: $status"
