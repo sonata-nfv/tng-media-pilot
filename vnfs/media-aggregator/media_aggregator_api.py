@@ -120,7 +120,7 @@ def status():
 
     uptime = dic['rtmp']['uptime']
 
-    if uptime > 100:
+    if int(uptime) > 0:
         status = "ok"
     else:
         status = "down"
