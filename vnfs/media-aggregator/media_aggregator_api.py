@@ -47,12 +47,14 @@ def register_camera():
     input_json = request.get_json()
 
     camera_name = input_json['name']
+    camera_type = input_json['type']
 
     with open("conf.json") as conf_json:
         data = json.load(conf_json)
 
     data["cameras"].append({
         "name": camera_name,
+        "type": camera_type,
         "streamingEngines": []
     })
 
