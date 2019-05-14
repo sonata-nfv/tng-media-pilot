@@ -47,12 +47,14 @@ def register_camera():
     input_json = request.get_json()
 
     camera_name = input_json['name']
+    camera_type = input_json['type']
 
     with open("conf.json") as conf_json:
         data = json.load(conf_json)
 
     data["cameras"].append({
         "name": camera_name,
+        "type": camera_type,
         "streamingEngines": []
     })
 
@@ -61,9 +63,10 @@ def register_camera():
 
     update_nginx(data)
 
+    ma_ip = os.getenv("vnf-ma_eu.5gtango_0.4_rtmp_ip")
+
     response = {}
-    #response["uuid"] = str(uuid.uuid4())
-    response["endpoint"] = "rtmp://10.100.32.240:1935/"+camera_name+"/"+camera_name #TODO: Put the correct MA IP
+    response["endpoint"] = "rtmp://+"+ma_ip+":1935/"+camera_name+"/"+camera_name
 
     return json.dumps(response, sort_keys=False)
 
@@ -99,7 +102,7 @@ def stats():
     dic = nginxStats()
 
     o_dic = {}
-    o_dic["resource_id"] = os.getenv("HOSTNAME")
+    o_dic["resource_id"] = os.getenv("container_name")
     o_dic["bw_in"] = dic['rtmp']['bw_in']
     o_dic["bw_out"] = dic['rtmp']['bw_out']
 
@@ -126,7 +129,7 @@ def status():
         status = "down"
 
     response = {}
-    response["resource_id"] = os.getenv("HOSTNAME")
+    response["resource_id"] = os.getenv("container_name")
     response["status"] = status
 
     return json.dumps(response, sort_keys=False)

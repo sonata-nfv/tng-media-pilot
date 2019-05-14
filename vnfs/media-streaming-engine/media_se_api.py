@@ -45,7 +45,7 @@ def stats():
     dic = nginxStats()
 
     o_dic = {}
-    o_dic["resource_id"] = os.getenv("HOSTNAME")
+    o_dic["resource_id"] = os.getenv("container_name")
     o_dic["bw_in"] = dic['rtmp']['bw_in']
     o_dic["bw_out"] = dic['rtmp']['bw_out']
 
@@ -73,7 +73,7 @@ def status():
         status = "down"
 
     response = {}
-    response["resource_id"] = os.getenv("HOSTNAME")
+    response["resource_id"] = os.getenv("container_name")
     response["status"] = status
 
     return json.dumps(response, sort_keys=False)
