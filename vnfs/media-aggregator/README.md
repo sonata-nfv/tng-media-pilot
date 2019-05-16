@@ -65,7 +65,8 @@ rtmp {
 This method creates a new application inside Nginx where the camera can send the video through RTMP. The input of this method is a simple JSON file:
 
     {
-		"name": "name_of_the_camera"
+		"name": "name_of_the_camera",
+		"type": "360/plane"
 	}
 
 The API will add the application into the nginx.conf file and reloads that configuration automatically without stop the service. 
@@ -76,7 +77,7 @@ The response will be the following:
 
 Here is an example call for this method:
 
-    curl -H 'content-Type: application/json' -X POST -d '{"name":"name_of_the_camera"}' http://[IP_of_the_aggregator]:5000/resgisterCamera
+    curl -H 'content-Type: application/json' -X POST -d '{"name":"name_of_the_camera","type":"360/plane"}' http://[IP_of_the_aggregator]:5000/resgisterCamera
 
 ### getStream
 This method will add a push order in the nginx configuration file. This push order will redirect the input flow of an specific application to the streaming-engine which corresponds. This is the JSON input:
