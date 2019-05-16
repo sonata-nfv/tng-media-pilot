@@ -1,16 +1,26 @@
 # media-streaming-engine
 
 This VNF implements the adaptive streaming algorithm, first transcodes 
-the video to different qualities and then generates the HLS manifest and video fragments. 
+the video to different qualities and then generates the HLS playlist and the video fragments. 
 
 It is built with Nginx compiled with the RTMP module. The transcoding 
-is implemented with ffmpeg.
+is implemented with ffmpeg. The video transcoding is divided in two different applications, one for 360 videos and other one for plane videos. The plane videos are going to be shown on a little virtual screen, so it is enough with a 720p video resolution instead of a FullHD one and also without audio, this will save hardware resources. For the 360 videos, there are more variants with higher resolutions, up to 4K. 
+
+Transcoding of a plane video:
 ```
-ffmpeg -i rtmp://localhost:1935/$app/$name -async 1 -vsync -1
-       -c:v libx264 -c:a libfdk_aac -profile:a aac_he -b:v 400k -b:a 64k -vf "scale=720:trunc(ow/a/2)*2" -tune zerolatency -preset superfast -f flv rtmp://localhost:1935/show/$name_mid
-       -c:v libx264 -c:a libfdk_aac -profile:a aac_he -b:v 800k -b:a 64k -vf "scale=1280:trunc(ow/a/2)*2" -tune zerolatency -preset superfast -f flv rtmp://localhost:1935/show/$name_hd720
-       -c:v copy -c:a libfdk_aac -profile:a aac_he -f flv rtmp://localhost:1935/show/$name_src; 
+ffmpeg -i rtmp://localhost:1935/$app/$name -filter_complex "[v:0]split=2[vtemp001][vtemp002];[vtemp001]scale=960:trunc(ow/a/2)*2[vout001];[vtemp002]scale=1280:trunc(ow/a/2)*2[vout002]"
+            -c:v libx264 -preset veryfast -g 120 -sc_threshold 0 -map [vout001] -c:v:0 libx264 -b:v:0 2000k -map [vout002] -c:v:1 libx264 -b:v:1 6000k
+            -an -f hls -hls_time 4 -master_pl_name $name.m3u8 -hls_flags independent_segments
+            -var_stream_map "v:0 v:1" /opt/data/hls/$name_%v.m3u8; 
 ``` 
+
+Transcoding of a 360 video:
+```
+ffmpeg -i rtmp://localhost:1935/$app/$name -filter_complex "[v:0]split=3[vtemp001][vtemp002][vout003];[vtemp001]scale=1280:trunc(ow/a/2)*2[vout001];[vtemp002]scale=1920:trunc(ow/a/2)*2[vout002]" -c:v libx264 -preset
+            veryfast -g 120 -sc_threshold 0 -map [vout001] -c:v:0 libx264 -b:v:0 3000k -map [vout002] -c:v:1 libx264 -b:v:1 6000k -map [vout003] -c:v:2 libx264 -b:v:2 13000k
+            -map a:0 -c:a:0 aac -b:a:0 128k -map a:0 -c:a:1 aac -b:a:1 196k -ac 2 -f hls -hls_time 4 -master_pl_name $name.m3u8 -hls_flags independent_segments
+            -var_stream_map "v:0,a:0 v:1,a:0 v:2,a:1" /opt/data/hls/$name_%v.m3u8;
+```
 
 ## Container details 
 The media-streaming-engine is deployed on a docker container which contains an
@@ -31,29 +41,44 @@ The container has three open ports for the different functions:
 | `5000` | API port |
 
 ## Qualities details
-There are three different qualities configured in the streaming-engine:
+For plane/secondary videos, we have two different qualities:
+* **Low:** 
+    * **Video codec:** H264
+    * **Audio codec:** -
+    * **Video bitrate:** 2000kbps
+    * **Audio bitrate:** -
+    * **Resolution:** 960x540 px
+    * **Network bandwidth specification:** 20000kbps
+* **High:**
+    * **Video codec:** H264
+    * **Audio codec:** -
+    * **Video bitrate:** 6000kpbs 
+    * **Audio bitrate:** -
+    * **Resolution:** 1280x720 px
+    * **Network bandwidth specification:** 6000kbps
+    
+For 360 videos, there are three different variants for the streaming
 * **Low:** 
     * **Video codec:** H264
     * **Audio codec:** AAC
-    * **Video bitrate:** 400k
-    * **Audio bitrate:** 64k
-    * **Resolution:** HD720
-    * **Network bandwidth specification:** 4 Mbps
+    * **Video bitrate:** 3000kbps
+    * **Audio bitrate:** 128kbps
+    * **Resolution:** 1280x640 px
+    * **Network bandwidth specification:** 3128kbps
 * **Mid:**
     * **Video codec:** H264
     * **Audio codec:** AAC
-    * **Video bitrate:** 800k
-    * **Audio bitrate:** 64k
-    * **Resolution:** HD1080
-    * **Network bandwidth specification:** 8Mbps
-* **Source:**
+    * **Video bitrate:** 6000kpbs 
+    * **Audio bitrate:** 128kbps
+    * **Resolution:** 1920x960 px
+    * **Network bandwidth specification:** 6128kbps
+* **High:**
     * **Video codec:** H264
     * **Audio codec:** AAC
-    * **Video bitrate:** original
-    * **Audio bitrate:** original 
-    * **Resolution:** original
-    * **Network bandwidth specification:** 10Mbps
-
+    * **Video bitrate:** 13000kpbs 
+    * **Audio bitrate:** 196kbps
+    * **Resolution:** Source 
+    * **Network bandwidth specification:** 13196kbps
 
 ## API description
 ### stats
