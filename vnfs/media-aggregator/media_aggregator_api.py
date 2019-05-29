@@ -23,7 +23,7 @@
 ## This work has been performed in the framework of the SONATA project,
 ## funded by the European Commission under Grant number 671517 through
 ## the Horizon 2020 and 5G-PPP programmes. The authors would like to
-## acknowledge the contributions of their colleagues of the SONATA
+## acknowled10.200.16.11ge the contributions of their colleagues of the SONATA
 ## partner consortium (www.sonata-nfv.eu).
 ##
 ## This work has been performed in the framework of the 5GTANGO project,
@@ -63,10 +63,11 @@ def register_camera():
 
     update_nginx(data)
 
-    ma_ip = os.getenv("vnf-ma_eu.5gtango_0.4_rtmp_ip")
+    ma_ip = os.getenv("vnf_ma_eu_5gtango_0_5_rtmp_ip")
+    print(ma_ip)
 
     response = {}
-    response["endpoint"] = "rtmp://+"+ma_ip+":1935/"+camera_name+"/"+camera_name
+    response["endpoint"] = "rtmp://" + ma_ip + ":1935/" + camera_name + "/" + camera_name
 
     return json.dumps(response, sort_keys=False)
 
@@ -77,6 +78,7 @@ def get_stream():
 
     stream_app = input_json["name"]
     streaming_engine_IP = input_json["se_ip"]
+    print(streaming_engine_IP)
     streaming_engine_IP = streaming_engine_IP.split(':')[0]
 
     with open("conf.json") as conf_json:
@@ -112,7 +114,7 @@ def stats():
         for app in dic['rtmp']['server'].get('application'):
             input_conn = input_conn+1
 
-        o_dic["input_conn"] = input_conn
+    o_dic["input_conn"] = input_conn
 
     return json.dumps(o_dic, sort_keys=False)
 
