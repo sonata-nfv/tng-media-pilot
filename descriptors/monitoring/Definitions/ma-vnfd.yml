@@ -16,11 +16,11 @@ cloudnative_deployment_units:
       - id: "int-api"
         port: 5000
   - id: "cdu02"
-    image: registry.sonata-nfv.eu:5000/tng-stats-collector:latest
+    image: pkarkazis/tng-stats-collector:latest
     parameters:
       env:
         VNF_STATS_URL: http://localhost:5000/stats
-        PW_URL: http://pushgateway.sonata.svc.cluster.local:9091
+        PW_URL: pushgateway.sonata.svc.cluster.local:9091
         INTERVAL: 2
 
 # VNF connection points to the outside world

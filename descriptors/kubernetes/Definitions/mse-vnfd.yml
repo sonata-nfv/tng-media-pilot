@@ -9,7 +9,7 @@ description: "Media-streaming-engine VNF descriptor."
 
 cloudnative_deployment_units:
   - id: "cndu01"
-    image: ignaciodomin/media-streaming-engine:dev2.0
+    image: ignaciodomin/media-streaming-engine:dev
     connection_points:
       - id: "int-rtmp"
         port: 1935

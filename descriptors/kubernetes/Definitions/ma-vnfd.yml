@@ -9,7 +9,7 @@ description: "Media-aggregator VNF descriptor."
 
 cloudnative_deployment_units:
   - id: "cndu01"
-    image: ignaciodomin/media-aggregator:dev2.0
+    image: ignaciodomin/media-aggregator:dev
     connection_points:
       - id: "int-rtmp"
         port: 1935

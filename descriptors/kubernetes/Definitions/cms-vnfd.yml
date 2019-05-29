@@ -13,11 +13,6 @@ cloudnative_deployment_units:
     connection_points:
       - id: "int-api"
         port: 50000
-    parameters:                 # (optional)
-        k8s_deployment:
-          key1: value2
-        k8s_service:
-          keyA: valueB
       
 # VNF connection points to the outside world
 connection_points:
