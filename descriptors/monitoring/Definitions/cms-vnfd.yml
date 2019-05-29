@@ -13,11 +13,13 @@ cloudnative_deployment_units:
     connection_points:
       - id: "int-api"
         port: 50000
-    parameters:                 # (optional)
-        k8s_deployment:
-          key1: value2
-        k8s_service:
-          keyA: valueB
+  - id: "cdu02"
+    image: pkarkazis/tng-stats-collector:latest
+    parameters:
+      env:
+        VNF_STATS_URL: http://localhost:50000/status
+        PW_URL: pushgateway.sonata.svc.cluster.local:9091
+        INTERVAL: 2
       
 # VNF connection points to the outside world
 connection_points:
