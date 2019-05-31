@@ -3,12 +3,12 @@ descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/mast
 
 vendor: "eu.5gtango"
 name: "vnf-mse"
-version: "0.4"
+version: "0.5"
 author: "Ignacio Dominguez"
 description: "Media-streaming-engine VNF descriptor."
 
 cloudnative_deployment_units:
-  - id: "cndu01"
+  - id: "cdu01"
     image: ignaciodomin/media-streaming-engine:dev
     connection_points:
       - id: "int-rtmp"
@@ -17,6 +17,13 @@ cloudnative_deployment_units:
         port: 80
       - id: "int-api"
         port: 5000
+  - id: "cdu02"
+    image: pkarkazis/tng-stats-collector:latest
+    parameters:
+      env:
+        VNF_STATS_URL: http://localhost:5000/stats
+        PW_URL: pushgateway.sonata.svc.cluster.local:9091
+        INTERVAL: 2
 
 # VNF connection points to the outside world
 connection_points:
@@ -39,14 +46,14 @@ virtual_links:
     connectivity_type: "E-Tree"
     connection_points_reference:
       - "rtmp"
-      - "cndu01:int-rtmp"
+      - "cdu01:int-rtmp"
   - id: "hls-link"
     connectivity_type: "E-Tree"
     connection_points_reference:
       - "hls"
-      - "cndu01:int-hls"
+      - "cdu01:int-hls"
   - id: "api-link"
     connectivity_type: "E-Tree"
     connection_points_reference:
       - "api"
-      - "cndu01:int-api"
+      - "cdu01:int-api"
