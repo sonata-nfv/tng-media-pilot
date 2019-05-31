@@ -63,8 +63,7 @@ def register_camera():
 
     update_nginx(data)
 
-    ma_ip = os.getenv("vnf_ma_eu_5gtango_0_5_rtmp_ip")
-    print(ma_ip)
+    ma_ip = os.getenv(get_ma_ip())
 
     response = {}
     response["endpoint"] = "rtmp://" + ma_ip + ":1935/" + camera_name + "/" + camera_name
@@ -160,6 +159,15 @@ def update_nginx(data):
     conf.write(render_template('nginx.conf', data=data))
     conf.truncate()
     conf.close()
+
+def get_ma_ip():
+    name = os.getenv('name')
+    vendor = os.getenv('vendor')
+    version = os.getenv('version')
+
+    ma_ip = name + '_' + vendor + '_' + version + '_rtmp_ip'
+
+    return ma_ip
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
