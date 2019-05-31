@@ -1,25 +1,31 @@
----
 descriptor_extension: yml
 version: '0.5'
 package:
-  vendor: "eu.5gtango"
-  name: "ns-mediapilot-service-k8s"
-  version: "0.4"
-  maintainer: "Ignacio Dominguez"
-  description: "This is the 5GTANGO network service for the media pilot with k8s"
+  vendor: eu.5gtango
+  name: ns-mediapilot-service
+  version: '0.5'
+  maintainer: Ignacio Dominguez
+  description: This is the 5GTANGO network service for the media pilot with monitoring and twitter vnf
+    integrated
 files:
-  - path: "Definitions/mediapilot-ns.yml"
-    type: "application/vnd.5gtango.nsd"
-    testing_tags:
-      - "http"
-      - "rtmp-media-service"
-  - path: "Definitions/ma-vnfd.yml"
-    type: "application/vnd.5gtango.vnfd"
-  - path: "Definitions/mse-vnfd.yml"
-    type: "application/vnd.5gtango.vnfd"
-  - path: "Definitions/cms-vnfd.yml"
-    type: "application/vnd.5gtango.vnfd"
-  - path: "Icons/atos_logo.png"
-    type: "image/png"
-  - path: "Licenses/LICENSE"
-    type: "text/plain"
+- path: Definitions/cms-vnfd.yml
+  type: application/vnd.5gtango.vnfd
+  tags:
+  - eu.5gtango
+- path: Definitions/ma-vnfd.yml
+  type: application/vnd.5gtango.vnfd
+  tags:
+  - eu.5gtango
+- path: Definitions/mse-vnfd.yml
+  type: application/vnd.5gtango.vnfd
+  tags:
+  - eu.5gtango
+- path: Definitions/twitter-vnfd.yml
+  type: application/vnd.5gtango.vnfd
+  tags:
+  - eu.5gtango
+- path: Definitions/mediapilot-ns.yml
+  type: application/vnd.5gtango.nsd
+  tags:
+  - eu.5gtango
+
