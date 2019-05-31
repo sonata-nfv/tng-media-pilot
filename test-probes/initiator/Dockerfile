@@ -1,8 +1,6 @@
 FROM alpine:3.4
 
 ENV CMS ""
-ENV MA ""
-ENV MSE ""
 ENV CAMERA ""
 
 RUN apk add --update \
