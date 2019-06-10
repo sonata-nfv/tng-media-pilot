@@ -5,7 +5,7 @@ source variables.env
 mkdir -p /output/ffprobe/${HOSTNAME}
 
 # Start the ffmpeg process:
-ffprobe -show_frames -select_streams v -print_format json -i "rtmp://${STREAMING_ENGINE}:1935/live/${STREAM}" > /output/ffprobe/${HOSTNAME}/logs.txt &
+timeout -t 90 ffprobe -show_frames -select_streams v -print_format json -i "rtmp://${STREAMING_ENGINE}:1935/plane/${STREAM}" > /output/ffprobe/${HOSTNAME}/logs.txt &
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start ffprobe: $status"

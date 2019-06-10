@@ -13,7 +13,7 @@ mkdir -p /output/cce/${HOSTNAME}
 #fi
 
 # Start the ffprobe process:
-ffprobe -show_streams -select_streams v -print_format json -i "rtmp://${STREAMING_ENGINE}:1935/show/${STREAM}_src" > /output/cce/${HOSTNAME}/logs.txt &
+timeout -t 90 ffprobe -show_streams -select_streams v -print_format json -i "rtmp://${STREAMING_ENGINE}:1935/show/${STREAM}_src" > /output/cce/${HOSTNAME}/logs.txt &
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start ffprobe: $status"
