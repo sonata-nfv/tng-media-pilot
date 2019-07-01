@@ -94,10 +94,6 @@ RUN rm -rf /var/cache/* /tmp/*
 #Install API dependencies:
 COPY ./requirements.txt /app/requirements.txt
 
-# Add NGINX config and static files.
-ADD nginx.conf /opt/nginx/nginx.conf
-ADD static /www/static
-
 WORKDIR  /app
 
 RUN mkdir /opt/data/hls && chmod a+rwx /opt/data/hls
@@ -105,6 +101,10 @@ RUN mkdir /opt/data/hls && chmod a+rwx /opt/data/hls
 #Python dependencies:
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
+
+# Add NGINX config and static files.
+ADD nginx.conf /opt/nginx/nginx.conf
+ADD static /www/static
 
 COPY . /app
 
