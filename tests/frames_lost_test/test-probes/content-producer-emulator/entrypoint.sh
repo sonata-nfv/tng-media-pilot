@@ -5,7 +5,7 @@ source variables.env
 #mkdir -p /output/cpe/${HOSTNAME}
 
 # Start the ffmpeg process:
-ffmpeg -re -i /app/$VIDEO -f flv rtmp://$AGGREGATOR:1935/$STREAM/$STREAM &
+ffmpeg -fflags +genpts -f lavfi -i testsrc=duration=80:size=1920x1080:rate=30 -f flv rtmp://$AGGREGATOR:1935/$STREAM/$STREAM &
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start ffmpeg: $status"

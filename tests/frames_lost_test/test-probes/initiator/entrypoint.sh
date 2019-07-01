@@ -12,9 +12,3 @@ curl -H 'content-Type: application/json' -X POST -d '{"name":"'"$CAMERA"'","type
 #It is possible to connect multiple cameras, just put a curl per streaming-engine
 curl -H 'content-Type: application/json' -X GET -d '{"name":"'"$CAMERA"'"}' http://$CMS:50000/getStreamURL
 
-exit_status = $?
-if [ $exit_status != 0 ]
-  then
-    exit $exit_status
-fi
-
