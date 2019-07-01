@@ -1,0 +1,230 @@
+{
+  "callbacks": [
+    {
+      "name": "running",
+      "path": "/api/v1/test-preparations/bc066267-cc01-4544-9e9f-78f65796c280/change/"
+    },
+    {
+      "name": "finish",
+      "path": "/api/v1/test-preparations/bc066267-cc01-4544-9e9f-78f65796c280/tests/12345/finish"
+    },
+    {
+      "name": "cancel",
+      "path": "/api/v1/test-preparations/bc066267-cc01-4544-9e9f-78f65796c280/tests/12345/cancel"
+    }
+  ],
+  "test": {
+    "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml",
+    "vendor": "eu.5gtango.atos",
+    "name": "test-immersive-media",
+    "version": "0.1",
+    "author": "Ignacio Dominguez, Felipe Vicens (ATOS)",
+    "description": "\"Performance test for video analysis\"\n",
+    "service_platforms": "sonata",
+    "test_tags": "rtmp-media-service",
+    "test_category": "benchmarking",
+    "phases": [
+      {
+        "id": "setup",
+        "steps": [
+          {
+            "name": "deployment",
+            "description": "Deploying a NS",
+            "action": "deploy"
+          },
+          {
+            "name": "configuration",
+            "description": null,
+            "action": "configure",
+            "probes": [
+              {
+                "id": "cpe",
+                "name": "cpe",
+                "image": "ignaciodomin/media-cpe:plane",
+                "description": "Content Producer Emulator (CPE) To generate a RTMP flow",
+                "parameters": [
+                  {
+                    "key": "AGGREGATOR",
+                    "value": "10.200.16.10"
+                  },
+                  {
+                    "key": "STREAM",
+                    "value": "plane"
+                  }
+                ]
+              },
+              {
+                "id": "ffprobe",
+                "name": "ffprobe",
+                "image": "ignaciodomin/media-ffprobe:dev",
+                "description": "Ffprobe",
+                "parameters": [
+                  {
+                    "key": "STREAMING_ENGINE",
+                    "value": "10.200.16.11"
+                  },
+                  {
+                    "key": "STREAM",
+                    "value": "plane"
+                  }
+                ]
+              },
+              {
+                "id": "cce",
+                "name": "cce",
+                "image": "ignaciodomin/media-cce:dev",
+                "description": "Content Consumer Emulator (CCE) To play HLS flows from Streaming engine",
+                "parameters": [
+                  {
+                    "key": "STREAMING_ENGINE",
+                    "value": "10.200.16.11"
+                  },
+                  {
+                    "key": "STREAM",
+                    "value": "plane"
+                  }
+                ]
+              },
+              {
+                "id": "parser",
+                "name": "parser",
+                "image": "ignaciodomin/media-parser:dev",
+                "description": "Parser",
+                "parameters": [
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "steps": [
+          {
+            "name": "cpe",
+            "description": "Starting the CPE that simulates the camera",
+            "run": "cpe",
+            "index": 1,
+            "entrypoint": "/app/entrypoint.sh",
+            "command": "/bin/sh",
+            "instances": 1,
+            "output": [
+              {
+                "results": "logs.txt"
+              }
+            ]
+          },
+          {
+            "name": "ffprobe",
+            "description": "Starting the CCE that simulates the consumer",
+            "run": "ffprobe",
+            "index": 2,
+            "entrypoint":"/app/entrypoint.sh",
+            "start_delay": 5,
+            "instances": 1,
+            "output": [
+              {
+                "results": "logs.txt"
+              }
+            ]
+          },
+          {
+            "name": "cce",
+            "description": "Starting the CCE that simulates the consumer",
+            "run": "cce",
+            "index": 3,
+            "entrypoint":"/app/entrypoint.sh",
+            "start_delay": 20,
+            "instances": 1,
+            "output": [
+              {
+                "results": "logs.txt"
+              }
+            ]
+          },
+          {
+            "name": "parser",
+            "description": "Starting the CCE that simulates the consumer",
+            "run": "parser",
+            "index": 4,
+            "entrypoint":"/app/entrypoint.sh",
+            "instances": 1,
+            "output": [
+              {
+                "results": "logs.txt"
+              }
+            ],
+            "dependencies": [
+              "cpe",
+              "ffprobe",
+              "cce"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "verification",
+        "steps": [
+          {
+            "name": "cpe",
+            "description": "Check cpe",
+            "step": "cpe",
+            "conditions": [
+              {
+                "name": "status",
+                "file": "status.txt",
+                "find": "ERROR",
+                "condition": "not present",
+                "verdict": "pass"
+              }
+            ]
+          },
+          {
+            "name": "cce",
+            "description": "Check cce",
+            "step": "cce",
+            "conditions": [
+              {
+                "name": "status",
+                "file": "status.txt",
+                "find": "ERROR",
+                "condition": "not present",
+                "verdict": "pass"
+              }
+            ]
+          },
+          {
+            "name": "ffprobe",
+            "description": "Check ffprobe",
+            "step": "ffprobe",
+            "conditions": [
+              {
+                "name": "status",
+                "file": "status.txt",
+                "find": "ERROR",
+                "condition": "not present",
+                "verdict": "pass"
+              }
+            ]
+          },
+          {
+            "name": "parser",
+            "description": "Check obtained results",
+            "step": "parser",
+            "conditions": [
+              {
+                "name": "lost-frames",
+                "file": "result.json",
+                "type": "json",
+                "find": "lost-frames",
+                "condition": "<",
+                "value": "90",
+                "verdict": "pass"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

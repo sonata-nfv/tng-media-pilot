@@ -1,4 +1,4 @@
-FROM alfg/ffmpeg
+FROM python:3.6-alpine
 
 RUN apk add --update \
     py-pip\
@@ -6,16 +6,10 @@ RUN apk add --update \
 
 RUN pip install docker-compose
 
-ENV AGGREGATOR ""
+ENV STREAMING_ENGINE ""
 ENV STREAM ""
 
-ARG video
-ENV VIDEO=$video
-
 WORKDIR /app
+COPY . /app/
 
-COPY $VIDEO /app
-COPY . /app
-
-ENTRYPOINT ["/app/entrypoint.sh"]
-
+ENTRYPOINT [ "/app/entrypoint.sh" ]
