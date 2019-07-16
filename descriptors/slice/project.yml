@@ -21,7 +21,7 @@ files:
     type: "application/vnd.5gtango.vnfd"
   - path: "Definitions/cms-vnfd.yml"
     type: "application/vnd.5gtango.vnfd"
-  - path: "Icons/atos_logo.png"
+  - path: "Icons/cttc_atos_logo.png"
     type: "image/png"
   - path: "Licenses/LICENSE"
     type: "text/plain"
