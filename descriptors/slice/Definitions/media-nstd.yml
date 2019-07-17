@@ -7,51 +7,55 @@ SNSSAI_identifier:
   slice-service-type: "eMBB"
 usageState: "NOT_IN_USE"
 slice_ns_subnets:
-- id: "cms-ns"
-  nsd-name: "cms_nsd"
-  nsd-vendor: "eu.sonata-nfv"
-  nsd-version: "0.2"
-  is-shared: True
-- id: "ma-ns"
-  nsd-name: "ma_nsd"
-  nsd-vendor: "eu.sonata-nfv"
-  nsd-version: "0.2"
-  is-shared: false
-- id: "mse-ns"
-  nsd-name: "mse_nsd"
-  nsd-vendor: "eu.sonata-nfv"
-  nsd-version: "0.2"
-  is-shared: false
+  - id: "cms-ns"
+    nsd-name: "cms_nsd"
+    nsd-vendor: "eu.sonata-nfv"
+    nsd-version: "0.2"
+    is-shared: True
+  - id: "ma-ns"
+    nsd-name: "ma_nsd"
+    nsd-vendor: "eu.sonata-nfv"
+    nsd-version: "0.2"
+    is-shared: false
+  - id: "mse-ns"
+    nsd-name: "mse_nsd"
+    nsd-vendor: "eu.sonata-nfv"
+    nsd-version: "0.2"
+    is-shared: false
 slice_vld:
-- id: "ma-cms-mse-api"
-  name: "ma_cms_mse_api"
-  mgmt-network: true
-  type: "E-LAN"
-  nsd-connection-point-ref:
-  - subnet-ref: "cms-ns"
-    nsd-cp-ref: "cms-internal"
-  - subnet-ref: "ma-ns"
-    nsd-cp-ref: "ma-api"
-  - subnet-ref: "mse-ns"
-    nsd-cp-ref: "mse-api"
-- id: "ma-mse-rtmp"
-  name: "ma_mse_rtmp"
-  type: "E-LAN"
-  nsd-connection-point-ref:
-  - subnet-ref: "ma-ns"
-    nsd-cp-ref: "ma-rtmp"
-  - subnet-ref: "mse-ns"
-    nsd-cp-ref: "mse-rtmp"
-- id: "mse-hls"
-  name: "mse_hls"
-  type: "E-LAN"
-  nsd-connection-point-ref:
-  - subnet-ref: "mse-ns"
-    nsd-cp-ref: "mse-hls"
-- id: "cms-external"
-  name: "cms_external"
-  mgmt-network: true
-  type: "E-LAN"
-  nsd-connection-point-ref:
-  - subnet-ref: "cms-ns"
-    nsd-cp-ref: "cms-external"
+  - id: "ma-cms-mse-api"
+    name: "ma_cms_mse_api"
+    mgmt-network: true
+    type: "E-LAN"
+    access_net: false
+    nsd-connection-point-ref:
+    - subnet-ref: "cms-ns"
+      nsd-cp-ref: "cms-internal"
+    - subnet-ref: "ma-ns"
+      nsd-cp-ref: "ma-api"
+    - subnet-ref: "mse-ns"
+      nsd-cp-ref: "mse-api"
+  - id: "ma-mse-rtmp"
+    name: "ma_mse_rtmp"
+    type: "E-LAN"
+    access_net: false
+    nsd-connection-point-ref:
+    - subnet-ref: "ma-ns"
+      nsd-cp-ref: "ma-rtmp"
+    - subnet-ref: "mse-ns"
+      nsd-cp-ref: "mse-rtmp"
+  - id: "mse-hls"
+    name: "mse_hls"
+    type: "E-LAN"
+    access_net: true
+    nsd-connection-point-ref:
+    - subnet-ref: "mse-ns"
+      nsd-cp-ref: "mse-hls"
+  - id: "cms-external"
+    name: "cms_external"
+    mgmt-network: true
+    type: "E-LAN"
+    access_net: true
+    nsd-connection-point-ref:
+    - subnet-ref: "cms-ns"
+      nsd-cp-ref: "cms-external"
