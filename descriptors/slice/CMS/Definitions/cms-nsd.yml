@@ -13,7 +13,7 @@ description: "This NS provides a Content management System VNF"
 network_functions: 
   - vnf_id: "vnf-cms"
     vnf_vendor: "eu.5gtango"
-    vnf_name: "cms-vnfd-h"
+    vnf_name: "vnf-cms"
     vnf_version: "0.1"
 
 ##

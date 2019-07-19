@@ -9,7 +9,7 @@ package:
   description: "This is the 5GTANGO use case with a Network Slice composed by NSs using VNFs and CNFs"
 files:
   - path: "Definitions/mse-nsd.yml"
-    type: "application/vnd.5gtango.vnfd"
+    type: "application/vnd.5gtango.nsd"
   - path: "Definitions/mse-vnfd.yml"
     type: "application/vnd.5gtango.vnfd"
   - path: "Icons/cttc_atos_logo.png"
