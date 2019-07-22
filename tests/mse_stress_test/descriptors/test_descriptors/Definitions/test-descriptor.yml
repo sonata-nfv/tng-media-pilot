@@ -44,10 +44,10 @@ phases:
       parameters:
       - key: AGGREGATOR
         value: '$(vnf-ma/endpoints/id:floating_ip/address)'
-      - key: APP
-        value: test
       - key: STREAM
         value: test
+      - key: VIDEO
+        value: 'h264_360_3M_judo.mkv'
 - id: exercise
   steps:
   - command: /bin/sh

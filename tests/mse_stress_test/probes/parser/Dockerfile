@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.6-alpineh264_360_3M_judo.mkv
 
 RUN apk add --update \
     py-pip\
