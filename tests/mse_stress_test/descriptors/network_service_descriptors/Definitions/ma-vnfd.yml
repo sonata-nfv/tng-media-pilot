@@ -3,7 +3,7 @@ descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/mast
 
 vendor: "eu.5gtango"
 name: "vnf-ma"
-version: "0.5"
+version: "0.7"
 author: "Ignacio Dominguez"
 description: "Media-aggregator and monitoring probe VNF descriptor."
 
@@ -15,6 +15,13 @@ cloudnative_deployment_units:
         port: 1935
       - id: "int-api"
         port: 5000
+  - id: "cdu02"
+    image: pkarkazis/tng-stats-collector:latest
+    parameters:
+      env:
+        VNF_STATS_URL: http://localhost:5000/stats
+        PW_URL: pushgateway.sonata.svc.cluster.local:9091
+        INTERVAL: 2
 
 # VNF connection points to the outside world
 connection_points:
@@ -39,4 +46,3 @@ virtual_links:
     connection_points_reference:
       - "api"
       - "cdu01:int-api"
-
