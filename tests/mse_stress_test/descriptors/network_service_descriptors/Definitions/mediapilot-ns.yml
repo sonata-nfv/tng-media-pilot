@@ -1,8 +1,8 @@
 #descriptor_version: "1.0"
 descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml
 vendor: "eu.sonata-nfv"
-name: "ns-mediapilot-service"
-version: "0.5"
+name: "mediapilot-service"
+version: "0.7"
 author: "Ignacio Dominguez @: atos"
 description: "This NS provides the video streaming service for the immersive media pilot."
 
@@ -10,19 +10,19 @@ description: "This NS provides the video streaming service for the immersive med
 ## The various network functions this service
 ## is composed of.
 ##
-network_functions: 
+network_functions:
   - vnf_id: "vnf-ma"
     vnf_vendor: "eu.5gtango"
     vnf_name: "vnf-ma"
-    vnf_version: "0.5"
+    vnf_version: "0.7"
   - vnf_id: "vnf-mse"
     vnf_vendor: "eu.5gtango"
     vnf_name: "vnf-mse"
-    vnf_version: "0.5"
+    vnf_version: "0.7"
   - vnf_id: "vnf-cms"
     vnf_vendor: "eu.5gtango"
     vnf_name: "vnf-cms"
-    vnf_version: "0.5"
+    vnf_version: "0.7"
 
 ##
 ## The NS connection points to the
@@ -33,9 +33,8 @@ connection_points:
     interface: "ipv4"
     type: "external"
 
-testing_tags: 
-  - "http"
-  - "rtmp-media-service"
+testing_tags:
+  - http
 
 ##
 ## The virtual links that interconnect
