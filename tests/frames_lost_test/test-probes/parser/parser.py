@@ -38,7 +38,8 @@ if __name__ == '__main__':
 
     # Just for the end-to-end test:
     result = {
-        "lost-frames": 68
+        "lost-frames": 68,
+        "I-frames": 264
     }
 
     writePath = '/output/parser/' + os.getenv("HOSTNAME") + '/result.json'
