@@ -1,6 +1,6 @@
 ---
 author: "Ignacio Dominguez (ATOS)"
-description: "HLS playlist test"
+description: "MSE CPU stress test"
 descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml
 name: "test-immersive-media-stress-mse"
 vendor: "eu.5gtango.atos"
@@ -29,7 +29,7 @@ phases:
       name: initiator
       parameters:
       - key: CAMERAS
-        value: 5 #This value is to configure the number of emulated cameras
+        value: '5' #This value is to configure the number of emulated cameras
       - key: CMS
         value: '$(vnf-cms/endpoints/id:floating_ip/address)'
     - id: parser
