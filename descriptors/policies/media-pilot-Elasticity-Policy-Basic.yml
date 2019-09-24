@@ -1,0 +1,101 @@
+## Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO
+## ALL RIGHTS RESERVED.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
+## Neither the name of the SONATA-NFV, 5GTANGO
+## nor the names of its contributors may be used to endorse or promote
+## products derived from this software without specific prior written
+## permission.
+##
+## This work has been performed in the framework of the SONATA project,
+## funded by the European Commission under Grant number 671517 through
+## the Horizon 2020 and 5G-PPP programmes. The authors would like to
+## acknowledge the contributions of their colleagues of the SONATA
+## partner consortium (www.sonata-nfv.eu).
+##
+## This work has been performed in the framework of the 5GTANGO project,
+## funded by the European Commission under Grant number 761493 through
+## the Horizon 2020 and 5G-PPP programmes. The authors would like to
+## acknowledge the contributions of their colleagues of the 5GTANGO
+## partner consortium (www.5gtango.eu).
+---
+descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/policy-descriptor/policy-schema.yml
+name: media-pilot-Elasticity-Policy-Basic
+vendor: eu.sonata-nfv
+version: '0.5'
+network_service:
+  vendor: eu.sonata-nfv
+  name: mediapilot-service
+  version: '0.5'
+monitoring_rules:
+- name: vnf-mse:cdu01:sum(rate(container_cpu_usage_seconds_total[15s]))by(name):more60
+  description: Trigger events if cpu utilization of media streaming engine is more than 60 percent
+  duration: 20
+  duration_unit: s
+  condition: sum(rate(container_cpu_usage_seconds_total[15s]))by(name)
+  threshold: " > 60"
+- name: vnf-mse:cdu01:sum(rate(container_cpu_usage_seconds_total[15s]))by(name):less30
+  description: Trigger events if cpu utilization of media streaming engine is less than 30.
+  duration: 1
+  duration_unit: m
+  condition: sum(rate(container_cpu_usage_seconds_total[15s]))by(name)
+  threshold: " < 30"
+policyRules:
+- name: ElasticityRuleScaleOut
+  salience: 1
+  inertia:
+    value: 15
+    duration_unit: m
+  conditions:
+    condition: AND
+    rules:
+    - id: vnf-mse.LogMetric
+      field: vnf-mse.LogMetric
+      type: string
+      input: text
+      operator: equal
+      value: vnf_mse_cdu01_sum(rate(container_cpu_usage_seconds_total[15s]))by(name)_more60
+  actions:
+  - action_object: ElasticityAction
+    action_type: ScalingType
+    name: addvnf
+    value: '1'
+    target:
+      name: vnf-mse
+      vendor: eu.5gtango
+      version: '0.5'
+- name: ElasticityRuleScaleIn
+  salience: 1
+  inertia:
+    value: 15
+    duration_unit: m
+  conditions:
+    condition: AND
+    rules:
+    - id: vnf-mse.LogMetric
+      field: vnf-mse.LogMetric
+      type: string
+      input: text
+      operator: equal
+      value: vnf_mse_cdu01_sum(rate(container_cpu_usage_seconds_total[15s]))by(name)_less30
+  actions:
+  - action_object: ElasticityAction
+    action_type: ScalingType
+    name: removevnf
+    value: '1'
+    criterion: random
+    target:
+      name: vnf-mse
+      vendor: eu.5gtango
+      version: '0.5'

@@ -65,7 +65,8 @@ rtmp {
 This method creates a new application inside Nginx where the camera can send the video through RTMP. The input of this method is a simple JSON file:
 
     {
-		"name": "name_of_the_camera"
+		"name": "name_of_the_camera",
+		"type": "360/plane"
 	}
 
 The API will add the application into the nginx.conf file and reloads that configuration automatically without stop the service. 
@@ -76,7 +77,7 @@ The response will be the following:
 
 Here is an example call for this method:
 
-    curl -H 'content-Type: application/json' -X POST -d '{"name":"name_of_the_camera"}' http://[IP_of_the_aggregator]:5000/resgisterCamera
+    curl -H 'content-Type: application/json' -X POST -d '{"name":"name_of_the_camera","type":"360/plane"}' http://[IP_of_the_aggregator]:5000/resgisterCamera
 
 ### getStream
 This method will add a push order in the nginx configuration file. This push order will redirect the input flow of an specific application to the streaming-engine which corresponds. This is the JSON input:
@@ -101,12 +102,22 @@ This method collects the stats from the Nginx server. It is called with:
 Here there is an example of the response:
 
     {
-        "resource_id": "smpilot-cccdu01-c9dbdeff-c50b-4ead-a6e6-9afdc3012334",
+        "container_id": "eu-5gtango-vnf-ma-0-4-f0e237c1-848f4fb898-gw9gc",
         "bw_in":"4396944",
         "bw_out":"4399488",
         "input_conn":2
     }
 
+### status
+This method tells to the CMS if the Nginx server is running correctly (`ok`) or not (`down`). It is called with:
+
+    curl -H 'content-Type: application/json' -X GET [IP_of_the_aggregator]:5000/status
     
+Here there is an example of the response:
+
+    {
+        "container_id": "eu-5gtango-vnf-ma-0-4-f0e237c1-848f4fb898-gw9gc", 
+        "status": "ok"
+    }
 
     

@@ -50,7 +50,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
   --conf-path=/opt/nginx/nginx.conf \
   --error-log-path=/opt/nginx/logs/error.log \
   --http-log-path=/opt/nginx/logs/access.log \
-  --with-debug && \
+  --with-debug &&\
   cd /tmp/nginx-${NGINX_VERSION} && make && make install
 
 # FFmpeg dependencies.
@@ -94,15 +94,17 @@ RUN rm -rf /var/cache/* /tmp/*
 #Install API dependencies:
 COPY ./requirements.txt /app/requirements.txt
 
-# Add NGINX config and static files.
-ADD nginx.conf /opt/nginx/nginx.conf
-ADD static /www/static
-
 WORKDIR  /app
+
+RUN mkdir /opt/data/hls && chmod a+rwx /opt/data/hls
 
 #Python dependencies:
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
+
+# Add NGINX config and static files.
+ADD nginx.conf /opt/nginx/nginx.conf
+ADD static /www/static
 
 COPY . /app
 

@@ -42,6 +42,44 @@ app = Flask(__name__)
 """This function reads the Nginx statistics and parses them to json format"""
 @app.route("/stats", methods=["GET"])
 def stats():
+    dic = nginxStats()
+
+    o_dic = {}
+    o_dic["resource_id"] = os.getenv("container_name")
+    o_dic["bw_in"] = dic['rtmp']['bw_in']
+    o_dic["bw_out"] = dic['rtmp']['bw_out']
+
+    #Check the number of input connections:
+    input_conn = 0
+    if dic['rtmp'].get('server'):
+        for app in dic['rtmp']['server']['application']:
+            input_conn = input_conn+1
+
+        o_dic["input_conn"] = input_conn
+
+    return json.dumps(o_dic, sort_keys=False)
+
+
+"""This function checks the availability of the VNF"""
+@app.route("/status", methods=["GET"])
+def status():
+    dic = nginxStats()
+
+    uptime = dic['rtmp']['uptime']
+
+    if int(uptime) > 0:
+        status = "ok"
+    else:
+        status = "down"
+
+    response = {}
+    response["resource_id"] = os.getenv("container_name")
+    response["status"] = status
+
+    return json.dumps(response, sort_keys=False)
+
+
+def nginxStats():
     ip = "localhost"
     port = "80"
     path = "/static/stat.xsl"
@@ -57,21 +95,7 @@ def stats():
 
     dic = xmltodict.parse(data)
 
-    o_dic = {}
-    o_dic["resource_id"] = os.getenv("HOSTNAME")
-    o_dic["bw_in"] = dic['rtmp']['bw_in']
-    o_dic["bw_out"] = dic['rtmp']['bw_out']
-
-    #Check the number of input connections:
-    input_conn = 0
-    if dic['rtmp'].get('server'):
-        for app in dic['rtmp']['server']['application']:
-            input_conn = input_conn+1
-
-        o_dic["input_conn"] = input_conn
-
-    return json.dumps(o_dic, sort_keys=False)
-
+    return dic
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

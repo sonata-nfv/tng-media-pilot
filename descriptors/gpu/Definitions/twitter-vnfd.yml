@@ -1,0 +1,47 @@
+---
+descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml"
+
+vendor: "eu.5gtango"
+name: "vnf-twitter"
+version: "0.6"
+author: "Robert Muller"
+description: "Twitter VNF descriptor."
+
+cloudnative_deployment_units:
+  - id: "cdu01"
+    image: vastor80/5gtangotwitter:latest
+    connection_points:
+      - id: "int-twitter"
+        port: 50001
+      - id: "int-monitoring"
+        port: 50010
+  - id: "cdu02"
+    image: pkarkazis/tng-stats-collector:latest
+    parameters:
+      env:
+        VNF_STATS_URL: http://localhost:50010/status
+        PW_URL: pushgateway.sonata.svc.cluster.local:9091
+        INTERVAL: 2
+# VNF connection points to the outside world
+connection_points:
+  - id: "twitter"
+    interface: "ipv4"
+    type: "serviceendpoint"
+    port: 50001
+  - id: "monitoring"
+    interface: "ipv4"
+    type: "serviceendpoint"
+    port: 50010
+
+# CNFs only use E-Tree links to map external ports to internal ports
+virtual_links:
+  - id: "twitter-link"
+    connectivity_type: "E-Tree"
+    connection_points_reference:
+      - "twitter"
+      - "cdu01:int-twitter"
+  - id: "monitoring-link"
+    connectivity_type: "E-Tree"
+    connection_points_reference:
+      - "monitoring"
+      - "cdu01:int-monitoring"
