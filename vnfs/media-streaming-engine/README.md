@@ -89,7 +89,7 @@ This method collects the stats from the Nginx server. It is called with:
 Here there is an example of the response:
 
     {
-        "resource_id": "eu-5gtango-vnf-mse-0-4-fbf0a168-7dd5449879-bqd9s",
+        "container_id": "eu-5gtango-vnf-mse-0-4-fbf0a168-7dd5449879-bqd9s",
         "bw_in":"4396944",
         "bw_out":"4399488",
         "input_conn":2
@@ -103,6 +103,6 @@ This method tells to the CMS if the Nginx server is running correctly (`ok`) or 
 Here there is an example of the response:
 
     {
-        "resource_id": "eu-5gtango-vnf-mse-0-4-fbf0a168-7dd5449879-bqd9s", 
+        "container_id": "eu-5gtango-vnf-mse-0-4-fbf0a168-7dd5449879-bqd9s", 
         "status": "ok"
     }
