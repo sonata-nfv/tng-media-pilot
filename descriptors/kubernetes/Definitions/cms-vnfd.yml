@@ -15,9 +15,14 @@ cloudnative_deployment_units:
         port: 50000
       - id: "int-monitoring"
         port: 50010
+      - id: "int-twitter"
+        port: 50001
+      - id: "int-youtube"
+        port: 50005
   - id: "cdu02"
     image: pkarkazis/tng-stats-collector:latest
     parameters:
+      cnf_ip: 172.31.13.200
       env:
         VNF_STATS_URL: http://localhost:50000/status
         PW_URL: pushgateway.sonata.svc.cluster.local:9091
@@ -33,6 +38,14 @@ connection_points:
     interface: "ipv4"
     type: "serviceendpoint"
     port: 50010
+  - id: "twitter"
+    interface: "ipv4"
+    type: "serviceendpoint"
+    port: 50001
+  - id: "youtube"
+    interface: "ipv4"
+    type: "serviceendpoint"
+    port: 50005
   
 # CNFs only use E-Tree links to map external ports to internal ports
 virtual_links:
@@ -46,3 +59,13 @@ virtual_links:
     connection_points_reference:
       - "monitoring"
       - "cdu01:int-monitoring"
+  - id: "twitter-link"
+    connectivity_type: "E-Tree"
+    connection_points_reference:
+      - "twitter"
+      - "cdu01:int-twitter"
+  - id: "youtube-link"
+    connectivity_type: "E-Tree"
+    connection_points_reference:
+      - "youtube"
+      - "cdu01:int-youtube"
