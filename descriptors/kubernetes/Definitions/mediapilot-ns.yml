@@ -27,6 +27,11 @@ network_functions:
     vnf_vendor: "eu.5gtango"
     vnf_name: "vnf-twitter"
     vnf_version: "0.5"
+  - vnf_id: "vnf-youtube"
+    vnf_vendor: "eu.5gtango"
+    vnf_name: "vnf-youtube"
+    vnf_version: "0.5"
+
 
 ##
 ## The NS connection points to the
@@ -63,8 +68,18 @@ virtual_links:
     connection_points_reference:
       - "vnf-ma:rtmp"
       - "vnf-mse:rtmp"
-  - id: "cms-twitter"
+  - id: "cms-monitoring"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "vnf-cms:monitoring"
       - "vnf-twitter:monitoring"
+  - id: "cms-youtube"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vnf-cms:youtube"
+      - "vnf-youtube:youtube"
+  - id: "cms-twitter"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vnf-cms:twitter"
+      - "vnf-twitter:twitter"
