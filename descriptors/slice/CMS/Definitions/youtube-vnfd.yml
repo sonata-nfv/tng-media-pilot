@@ -1,0 +1,50 @@
+---
+descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml"
+
+vendor: "eu.5gtango"
+name: "vnf-youtube"
+version: "0.1"
+author: "Robert Mueller :@ nuromedia"
+description: "Media-cms-youtube VNF descriptor."
+
+virtual_deployment_units:
+  - id: "vdu01"
+    vm_image: "http://www.google.es"
+    vm_image_format: "qcow2"
+    vm_image_md5: ''
+    resource_requirements:
+      cpu:
+        vcpus: 2
+      memory:
+        size: 4
+        size_unit: "GB"
+      storage:
+        size: 60
+        size_unit: "GB"
+    connection_points:
+      - id: "external"
+        interface: "ipv4"
+        type: "external"
+      - id: "internal"
+        interface: "ipv4"
+        type: "internal"
+
+connection_points:
+  - id: "cpexternal"
+    interface: "ipv4"
+    type: "external"
+  - id: "cpinternal"
+    interface: "ipv4"
+    type: "internal"
+
+virtual_links:
+  - id: "vlexternal"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vdu01:external"
+      - "cpexternal"
+  - id: "vlinternal"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vdu01:internal"
+      - "cpinternal"

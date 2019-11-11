@@ -1,19 +1,19 @@
 #descriptor_version: "1.0"
 descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml
 vendor: "eu.sonata-nfv"
-name: "mse-nsd"
+name: "mse-cache-nsd"
 version: "0.2"
 author: "Ignacio Dominguez @: atos, Pol Alemany @: CTTC"
-description: "This NS provides the video streaming service VNF."
+description: "This NS provides the video cache service VNF."
 
 ##
 ## The various network functions this service
 ## is composed of.
 ##
 network_functions: 
-  - vnf_id: "vnf-mse"
+  - vnf_id: "vnf-mse-cache"
     vnf_vendor: "eu.5gtango"
-    vnf_name: "vnf-mse"
+    vnf_name: "vnf-mse-cache"
     vnf_version: "0.5"
 
 ##
@@ -21,9 +21,6 @@ network_functions:
 ## outside world.
 ##
 connection_points:
-  - id: "mse-rtmp"
-    interface: "ipv4"
-    type: "internal"
   - id: "mse-hls"
     interface: "ipv4"
     type: "external"
@@ -47,8 +44,3 @@ virtual_links:
     connection_points_reference:
       - "vnf-mse:api"
       - "mse-api"
-  - id: "mse-vl-rtmp"
-    connectivity_type: "E-Line"
-    connection_points_reference:
-      - "vnf-mse:rtmp"
-      - "mse-rtmp"
