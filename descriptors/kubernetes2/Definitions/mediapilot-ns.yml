@@ -2,7 +2,7 @@
 descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml
 vendor: "eu.sonata-nfv"
 name: "mediapilot-service"
-version: "0.5"
+version: "0.8"
 author: "Ignacio Dominguez @: atos"
 description: "This NS provides the video streaming service for the immersive media pilot."
 
@@ -14,23 +14,27 @@ network_functions:
   - vnf_id: "vnf-ma"
     vnf_vendor: "eu.5gtango"
     vnf_name: "vnf-ma"
-    vnf_version: "0.5"
-  - vnf_id: "vnf-mse"
+    vnf_version: "0.8"
+  - vnf_id: "vnf-mse-cache"
     vnf_vendor: "eu.5gtango"
-    vnf_name: "vnf-mse"
-    vnf_version: "0.5"
+    vnf_name: "vnf-mse-cache"
+    vnf_version: "0.8"
+  - vnf_id: "vnf-mse-transcode"
+    vnf_vendor: "eu.5gtango"
+    vnf_name: "vnf-mse-transcode"
+    vnf_version: "0.8"
   - vnf_id: "vnf-cms"
     vnf_vendor: "eu.5gtango"
     vnf_name: "vnf-cms"
-    vnf_version: "0.5"
+    vnf_version: "0.8"
   - vnf_id: "vnf-twitter"
     vnf_vendor: "eu.5gtango"
     vnf_name: "vnf-twitter"
-    vnf_version: "0.5"
+    vnf_version: "0.8"
   - vnf_id: "vnf-youtube"
     vnf_vendor: "eu.5gtango"
     vnf_name: "vnf-youtube"
-    vnf_version: "0.5"
+    vnf_version: "0.8"
 
 
 ##
@@ -54,7 +58,7 @@ virtual_links:
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "vnf-ma:rtmp"
-      - "vnf-mse:hls"
+      - "vnf-mse-cache:hls"
       - "vnf-cms:api"
       - "nscpexternal"
   - id: "vlapi"
@@ -62,12 +66,13 @@ virtual_links:
     connection_points_reference:
       - "vnf-cms:api"
       - "vnf-ma:api"
-      - "vnf-mse:api"
+    #  - "vnf-mse-cache:api"
+    #  - "vnf-mse-transcode:api"
   - id: "aggregator-mse"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "vnf-ma:rtmp"
-      - "vnf-mse:rtmp"
+      - "vnf-mse-transcode:rtmp"
   - id: "cms-monitoring"
     connectivity_type: "E-Line"
     connection_points_reference:
