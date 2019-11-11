@@ -5,7 +5,6 @@ ENV NGINX_RTMP_VERSION 1.2.1
 ENV FFMPEG_VERSION 4.1
 
 EXPOSE 1935
-EXPOSE 80
 EXPOSE 5000
 
 RUN mkdir -p /opt/data && mkdir /www
@@ -96,7 +95,7 @@ COPY ./requirements.txt /app/requirements.txt
 
 WORKDIR  /app
 
-RUN mkdir /opt/data/hls && chmod a+rwx /opt/data/hls
+RUN mkdir /opt/data/hls && chmod 777 /opt/data/hls
 
 #Python dependencies:
 RUN pip3 install --upgrade pip
@@ -104,7 +103,6 @@ RUN pip3 install -r requirements.txt
 
 # Add NGINX config and static files.
 ADD nginx.conf /opt/nginx/nginx.conf
-ADD static /www/static
 
 COPY . /app
 

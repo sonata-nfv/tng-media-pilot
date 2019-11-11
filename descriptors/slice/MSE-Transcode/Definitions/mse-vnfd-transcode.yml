@@ -9,12 +9,10 @@ description: "Media-streaming-engine VNF descriptor."
 
 cloudnative_deployment_units:
   - id: "cdu01"
-    image: ignaciodomin/media-streaming-engine:dev
+    image: ignaciodomin/media-engine:dev
     connection_points:
       - id: "int-rtmp"
         port: 1935
-      - id: "int-hls"
-        port: 80
       - id: "int-api"
         port: 5000
   - id: "cdu02"
@@ -31,10 +29,6 @@ connection_points:
     interface: "ipv4"
     type: "serviceendpoint"
     port: 1935
-  - id: "hls"
-    interface: "ipv4"
-    type: "serviceendpoint"
-    port: 80
   - id: "api"
     interface: "ipv4"
     type: "serviceendpoint"
@@ -47,11 +41,6 @@ virtual_links:
     connection_points_reference:
       - "rtmp"
       - "cdu01:int-rtmp"
-  - id: "hls-link"
-    connectivity_type: "E-Tree"
-    connection_points_reference:
-      - "hls"
-      - "cdu01:int-hls"
   - id: "api-link"
     connectivity_type: "E-Tree"
     connection_points_reference:

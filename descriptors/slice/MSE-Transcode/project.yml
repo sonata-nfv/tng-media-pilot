@@ -4,13 +4,13 @@ version: '0.5'
 package:
   vendor: "eu.5gtango"
   name: "mediapilot-slice-mse"
-  version: "0.1"
+  version: "0.2"
   maintainer: "Ignacio Dominguez, Pol Alemany"
   description: "This is the 5GTANGO use case with a Network Slice composed by NSs using VNFs and CNFs"
 files:
-  - path: "Definitions/mse-nsd.yml"
+  - path: "Definitions/mse-nsd-transcode.yml"
     type: "application/vnd.5gtango.nsd"
-  - path: "Definitions/mse-vnfd.yml"
+  - path: "Definitions/mse-vnfd-transcode.yml"
     type: "application/vnd.5gtango.vnfd"
   - path: "Icons/cttc_atos_logo.png"
     type: "image/png"
