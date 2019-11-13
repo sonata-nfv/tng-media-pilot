@@ -95,7 +95,7 @@ COPY ./requirements.txt /app/requirements.txt
 
 WORKDIR  /app
 
-RUN mkdir /opt/data/hls && chmod 777 /opt/data/hls
+RUN mkdir /opt/data/hls && chmod a+rwx /opt/data/hls
 
 #Python dependencies:
 RUN pip3 install --upgrade pip

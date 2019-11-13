@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # Start the nginx process:
-/opt/nginx/sbin/nginx &
+nginx -g 'daemon off;' &
+#/var/nginx/sbin/nginx &
 #/var/lib/docker/volumes/my-vol/_data/nginx/sbin/nginx &
 status=$?
 if [ $status -ne 0 ]; then
