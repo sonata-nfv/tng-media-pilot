@@ -32,77 +32,36 @@
 ## acknowledge the contributions of their colleagues of the 5GTANGO
 ## partner consortium (www.5gtango.eu).
 
-from flask import Flask, request, json, render_template
-
-import http.client, xmltodict, os, logging, requests
+from flask import Flask, json
+import os, logging, requests
+from flask.json import jsonify
+import json
 
 app = Flask(__name__)
 
 
-# """This function reads the Nginx statistics and parses them to json format"""
-# @app.route("/stats", methods=["GET"])
-# def stats():
-#     dic = nginxStats()
+"""This function reads the Nginx statistics and parses them to json format"""
+@app.route("/stats", methods=["GET"])
+def stats():
+    o_dic = []
+    with open("/var/log/nginx/hls.log") as f:
+        lines = f.readlines()
+        if lines:
+            for line in lines:
+                o_dic.append(json.loads(line))
 
-#     o_dic = {}
-#     o_dic["resource_id"] = os.getenv("container_name")
-#     o_dic["bw_in"] = dic['rtmp']['bw_in']
-#     o_dic["bw_out"] = dic['rtmp']['bw_out']
+    f = open("/var/log/nginx/hls.log", "w")
+    f.write("")
+    f.close()
 
-#     #Check the number of input connections:
-#     input_conn = 0
-#     if dic['rtmp'].get('server'):
-#         for app in dic['rtmp']['server']['application']:
-#             input_conn = input_conn+1
-
-#         o_dic["input_conn"] = input_conn
-
-#     return json.dumps(o_dic, sort_keys=False)
-
-
-# """This function checks the availability of the VNF"""
-# @app.route("/status", methods=["GET"])
-# def status():
-#     dic = nginxStats()
-
-#     uptime = dic['rtmp']['uptime']
-
-#     if int(uptime) > 0:
-#         status = "ok"
-#     else:
-#         status = "down"
-
-#     response = {}
-#     response["resource_id"] = os.getenv("container_name")
-#     response["status"] = status
-
-#     return json.dumps(response, sort_keys=False)
-
-
-# def nginxStats():
-#     ip = "localhost"
-#     port = "80"
-#     path = "/static/stat.xsl"
-
-#     conn = http.client.HTTPConnection(ip, port)
-
-#     conn.request("GET", path)
-#     response = conn.getresponse()
-#     data = response.read()
-#     conn.close()
-
-#     data = data.decode("utf-8")
-
-#     dic = xmltodict.parse(data)
-
-#     return dic
+    return jsonify(o_dic), 200
 
 def get_mse_ip():
     name = os.getenv('name')
     vendor = os.getenv('vendor')
     version = os.getenv('version')
 
-    mse_ip = '{name}_{vendor}_{version}_hls_ip'.format(name=name, vendor=vendor, version=version)
+    mse_ip = os.getenv('{name}_{vendor}_{version}_hls_ip'.format(name=name, vendor=vendor, version=version))
 
     return mse_ip
 
