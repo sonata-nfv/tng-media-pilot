@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Rewrite the env variable for hosts
+sed -e "s/{container_name}/$container_name/g" /nginx_template.conf > /nginx.conf
+mv /nginx.conf /etc/nginx/nginx.conf
+
 # Start the nginx process:
 nginx -g 'daemon off;' &
 #/var/nginx/sbin/nginx &
