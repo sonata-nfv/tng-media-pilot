@@ -20,21 +20,21 @@
       "id": "ma-ns",
       "nsd-name": "ma-nsd",
       "nsd-vendor": "eu.sonata-nfv",
-      "nsd-version": "0.2",
+      "nsd-version": "0.3",
       "is-shared": false
     },
     {
       "id": "mse-transcode-ns",
       "nsd-name": "mse-transcode-nsd",
       "nsd-vendor": "eu.sonata-nfv",
-      "nsd-version": "0.2",
+      "nsd-version": "0.3",
       "is-shared": false
     },
     {
       "id": "mse-cache-ns",
       "nsd-name": "mse-cache-nsd",
       "nsd-vendor": "eu.sonata-nfv",
-      "nsd-version": "0.2",
+      "nsd-version": "0.3",
       "is-shared": false
     }
   ],

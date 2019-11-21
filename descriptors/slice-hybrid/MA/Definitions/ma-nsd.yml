@@ -2,7 +2,7 @@
 descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml
 vendor: "eu.sonata-nfv"
 name: "ma-nsd"
-version: "0.2"
+version: "0.3"
 author: "Ignacio Dominguez @: atos, Pol Alemany @: CTTC"
 description: "This NS provides the media aggregator VNF."
 
@@ -14,7 +14,7 @@ network_functions:
   - vnf_id: "vnf-ma"
     vnf_vendor: "eu.5gtango"
     vnf_name: "vnf-ma"
-    vnf_version: "0.5"
+    vnf_version: "0.9"
 
 ##
 ## The NS connection points to the
