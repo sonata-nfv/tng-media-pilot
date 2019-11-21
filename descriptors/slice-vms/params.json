@@ -1,0 +1,14 @@
+[
+  {
+    "subnet_id": "ma-ns",
+    "params": { "cms-ip": "172.31.8.246", "event": "event-1" }
+  },
+  {
+    "subnet_id": "mse-transcode-ns",
+    "params": { "cms-ip": "172.31.8.246", "event": "event-1" }
+  },
+  {
+    "subnet_id": "mse-cache-ns",
+    "params": { "cms-ip": "172.31.8.246", "event": "event-1" }
+  }
+]

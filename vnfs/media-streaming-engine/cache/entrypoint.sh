@@ -1,7 +1,12 @@
 #!/bin/sh
 
+# Rewrite the env variable for hosts
+sed -e "s/{container_name}/$container_name/g" /nginx_template.conf > /nginx.conf
+mv /nginx.conf /etc/nginx/nginx.conf
+
 # Start the nginx process:
-/opt/nginx/sbin/nginx &
+nginx -g 'daemon off;' &
+#/var/nginx/sbin/nginx &
 #/var/lib/docker/volumes/my-vol/_data/nginx/sbin/nginx &
 status=$?
 if [ $status -ne 0 ]; then
