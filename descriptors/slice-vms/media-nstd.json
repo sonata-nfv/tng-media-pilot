@@ -56,11 +56,11 @@
         },
         {
           "subnet-ref": "mse-transcode-ns",
-          "nsd-cp-ref": "mse-api"
+          "nsd-cp-ref": "mse-transcode-api"
         },
         {
           "subnet-ref": "mse-cache-ns",
-          "nsd-cp-ref": "mse-api"
+          "nsd-cp-ref": "mse-cache-api"
         }
       ]
     },
@@ -76,7 +76,7 @@
         },
         {
           "subnet-ref": "mse-transcode-nsd",
-          "nsd-cp-ref": "mse-rtmp"
+          "nsd-cp-ref": "mse-transcode-rtmp"
         }
       ]
     },
@@ -88,7 +88,7 @@
       "nsd-connection-point-ref": [
         {
           "subnet-ref": "mse-cache-ns",
-          "nsd-cp-ref": "mse-hls"
+          "nsd-cp-ref": "mse-cache-hls"
         }
       ]
     },
