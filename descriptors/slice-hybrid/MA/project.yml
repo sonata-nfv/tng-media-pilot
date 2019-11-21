@@ -4,7 +4,7 @@ version: '0.5'
 package:
   vendor: "eu.5gtango"
   name: "mediapilot-slice-ma"
-  version: "0.2"
+  version: "0.3"
   maintainer: "Ignacio Dominguez, Pol Alemany"
   description: "This is the 5GTANGO use case with a Network Slice composed by NSs using VNFs and CNFs"
 files:
