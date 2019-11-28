@@ -66,27 +66,43 @@ def get_mse_ip():
     return mse_ip
 
 def register():
-    name = os.getenv('HOSTNAME')
-    location = '-' #TODO: add here a location, maybe an env var from slice?.
-    ip = get_mse_ip()
+    with app.app_context():
+        name = os.getenv('HOSTNAME')
+        location = os.getenv('event') 
+        ip = get_mse_ip()
 
-    conf = {}
-    conf['streamingengines'] = {}
+        conf = {}
+        conf['StreamingEngines'] = []
+        conf['StreamingEngines'].append({'name': name, 'location': location, 'ip': ip})
+        conf['Aggregators'] = []
 
-    conf['streamingengines']['name'] = name
-    conf['streamingengines']['location'] = location
-    conf['streamingengines']['ip'] = ip
+        try:
+            api_endpoint = 'http://{}:50000/configure'.format(os.getenv('CMS_IP'))
+        except:
+            logging.error('CMS_IP env variable not found')
 
-    api_endpoint = 'http://{}:50000/configure'.format(os.getenv('vnf_cms_eu_5gtango_0_8_api_ip'))
-    body = json.dumps(conf, sort_keys=False)
+        body = json.dumps(conf, sort_keys=False)
+        logging.info('Body: {}'.format(body))
 
-    r = requests.post(url=api_endpoint, data=body)
+        try:
+            r = requests.post(url=api_endpoint, data=body, headers={'Content-type': 'application/json'})
+        except requests.exceptions.RequestException as e:
+            logging.error('{}'.format(e))
 
-    logging.info('{status}, {reason}'.format(status=r.status_code, reason=r.reason))
+        logging.info('{status}, {reason}'.format(status=r.status_code, reason=r.reason))
+
+        return status
+
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+
+    status = 200
 
     if "CMS_IP" in os.environ:
-        register()
+       status = register()
 
-    app.run(host='0.0.0.0', debug=True)
+    if status is 200:
+        app.run(host='0.0.0.0', debug=True)
+    else:
+        logging.info('Media Streaming Engine not registered, {} response from the CMS'.format(status))
