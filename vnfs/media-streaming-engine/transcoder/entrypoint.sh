@@ -1,5 +1,7 @@
 #!/bin/sh
 
+chmod +x /app/plane_transcoding.sh
+chmod +x /app/360_transcoding.sh
 # Start the nginx process:
 /opt/nginx/sbin/nginx &
 #/var/lib/docker/volumes/my-vol/_data/nginx/sbin/nginx &
