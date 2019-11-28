@@ -3,9 +3,9 @@ version: '0.5'
 package:
   vendor: eu.5gtango
   name: ns-mediapilot-service
-  version: '0.7'
+  version: '0.9'
   maintainer: Ignacio Dominguez
-  description: This is the 5GTANGO network service for the media pilot with monitoring, Twitter and Youtube VNF
+  description: This is the NEW 5GTANGO network service for the media pilot with monitoring, Twitter and Youtube VNF
     integrated
 files:
 - path: Definitions/cms-vnfd.yml
@@ -16,7 +16,11 @@ files:
   type: application/vnd.5gtango.vnfd
   tags:
   - eu.5gtango
-- path: Definitions/mse-vnfd.yml
+- path: Definitions/mse-cache-vnfd.yml
+  type: application/vnd.5gtango.vnfd
+  tags:
+  - eu.5gtango
+- path: Definitions/mse-transcode-vnfd.yml
   type: application/vnd.5gtango.vnfd
   tags:
   - eu.5gtango

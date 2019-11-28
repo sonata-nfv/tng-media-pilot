@@ -19,7 +19,7 @@ virtual_deployment_units:
         size: 2
         size_unit: "GB"
       storage:
-        size: 40
+        size: 60
         size_unit: "GB"
     connection_points:
       - id: "external"

@@ -1,20 +1,31 @@
 ---
 descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml"
-
 vendor: "eu.5gtango"
-name: "ma-vnfd-h"
-version: "0.2"
+name: "vnf-mse-transcode"
+version: "0.9"
 author: "Ignacio Dominguez"
-description: "Media-aggregator VNF descriptor."
+description: "Media-streaming-engine transcoder VNF descriptor."
 
 cloudnative_deployment_units:
-  - id: "cndu01"
-    image: ignaciodomin/media-aggregator:dev
+  - id: "cdu01"
+    image: ignaciodomin/media-engine:dev
     connection_points:
       - id: "int-rtmp"
         port: 1935
       - id: "int-api"
         port: 5000
+    parameters:
+      volume_mounts:  
+      - id: media-storage
+        persistent: True
+        location: '/opt/data/'
+  - id: "cdu02"
+    image: sonatanfv/tng-stats-collector:dev
+    parameters:
+      env:
+        VNF_STATS_URL: http://localhost:5000/stats
+        PW_URL: pushgateway.sonata.svc.cluster.local:9091
+        INTERVAL: 2
 
 # VNF connection points to the outside world
 connection_points:
@@ -33,9 +44,9 @@ virtual_links:
     connectivity_type: "E-Tree"
     connection_points_reference:
       - "rtmp"
-      - "cndu01:int-rtmp"
+      - "cdu01:int-rtmp"
   - id: "api-link"
     connectivity_type: "E-Tree"
     connection_points_reference:
       - "api"
-      - "cndu01:int-api"
+      - "cdu01:int-api"
