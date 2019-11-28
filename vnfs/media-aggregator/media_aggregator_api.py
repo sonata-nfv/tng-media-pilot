@@ -85,7 +85,6 @@ def get_stream():
 
     stream_app = input_json["name"]
     streaming_engine_IP = input_json["se_ip"]
-    print(streaming_engine_IP)
     streaming_engine_IP = streaming_engine_IP.split(':')[0]
 
     with open("conf.json") as conf_json:
@@ -138,7 +137,7 @@ def status():
 
     uptime = dic['rtmp']['uptime']
 
-    logging.info('Nginx uptime: {}').format(uptime)
+    logging.info('Nginx uptime: {}'.format(uptime))
 
     if int(uptime) > 0:
         status = "ok"
@@ -169,6 +168,8 @@ def nginxStats():
 
     dic = xmltodict.parse(data)
 
+    logging.info('Nginx metrics dic: {}'.format(dic))
+
     return dic
 
 def update_nginx(data):
@@ -183,34 +184,48 @@ def get_ma_ip():
     vendor = os.getenv('vendor')
     version = os.getenv('version')
 
-    ma_ip = '{name}_{vendor}_{version}_rtmp_ip'.format(name=name, vendor=vendor, version=version)
+    ma_ip = os.getenv('{name}_{vendor}_{version}_rtmp_ip'.format(name=name, vendor=vendor, version=version))
 
     return ma_ip
 
 def register():
-    name = os.getenv('HOSTNAME')
-    location = '-' #TODO: add here a location, maybe an env var from slice?.
-    ip = get_ma_ip()
+    with app.app_context():
+        name = os.getenv('HOSTNAME')
+        location = os.getenv('event') 
+        ip = get_ma_ip()
 
-    conf = {}
-    conf['aggregators'] = {}
+        conf = {}
+        conf['Aggregators'] = []
+        conf['Aggregators'].append({'name': name, 'location': location, 'ip': ip})
+        conf['StreamingEngines'] = []
 
-    conf['aggregators']['name'] = name
-    conf['aggregators']['location'] = location
-    conf['aggregators']['ip'] = ip
+        try:
+            api_endpoint = 'http://{}:50000/configure'.format(os.getenv('CMS_IP'))
+        except:
+            logging.error('CMS_IP env variable not found')
 
-    api_endpoint = 'http://{}:50000/configure'.format(os.getenv('vnf_cms_eu_5gtango_0_8_api_ip'))
-    body = json.dumps(conf, sort_keys=False)
+        body = json.dumps(conf, sort_keys=False)
+        logging.info('Body: {}'.format(body))
 
-    r = requests.post(url=api_endpoint, data=body)
+        try:
+            r = requests.post(url=api_endpoint, data=body, headers={'Content-type': 'application/json'})
+        except requests.exceptions.RequestException as e:
+            logging.error('{}'.format(e))
 
-    logging.info('{status}, {reason}'.format(status=r.status_code, reason=r.reason))
+        logging.info('{status}, {reason}'.format(status=r.status_code, reason=r.reason))
+
+        return status
 
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
-    if "CMS_IP" in os.environ:
-        register()
+    status = 200
 
-    app.run(host='0.0.0.0', debug=True)
+    if "CMS_IP" in os.environ:
+       status = register()
+
+    if status is 200:
+        app.run(host='0.0.0.0', debug=True)
+    else:
+        logging.info('Media Aggregator not registered, {} response from the CMS'.format(status))
