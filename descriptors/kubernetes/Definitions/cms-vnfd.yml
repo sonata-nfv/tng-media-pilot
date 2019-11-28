@@ -3,13 +3,13 @@ descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/mast
 
 vendor: "eu.5gtango"
 name: "vnf-cms"
-version: "0.5"
+version: "0.9"
 author: "Ignacio Dominguez"
 description: "Media-cms VNF descriptor."
 
 cloudnative_deployment_units:
   - id: "cdu01"
-    image: vastor80/5gtango:latest
+    image: vastor80/5gtango:rtmp
     connection_points:
       - id: "int-api"
         port: 50000
@@ -19,10 +19,11 @@ cloudnative_deployment_units:
         port: 50001
       - id: "int-youtube"
         port: 50005
-  - id: "cdu02"
-    image: pkarkazis/tng-stats-collector:latest
     parameters:
-      cnf_ip: 172.31.13.200
+      cnf_ip: 172.31.13.149
+  - id: "cdu02"
+    image: sonatanfv/tng-stats-collector:dev
+    parameters:
       env:
         VNF_STATS_URL: http://localhost:50000/status
         PW_URL: pushgateway.sonata.svc.cluster.local:9091

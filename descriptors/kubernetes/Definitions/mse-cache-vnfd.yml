@@ -1,34 +1,39 @@
 ---
 descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml"
-
 vendor: "eu.5gtango"
-name: "vnf-ma"
-version: "0.8"
+name: "vnf-mse-cache"
+version: "0.9"
 author: "Ignacio Dominguez"
-description: "Media-aggregator and monitoring probe VNF descriptor."
+description: "Media-streaming-engine cache VNF descriptor."
 
 cloudnative_deployment_units:
   - id: "cdu01"
-    image: ignaciodomin/media-aggregator:test
+    image: ignaciodomin/media-cache:dev
     connection_points:
-      - id: "int-rtmp"
-        port: 1935
+      - id: "int-hls"
+        port: 80
       - id: "int-api"
         port: 5000
+    parameters:
+      volume_mounts:  
+      - id: media-storage
+        persistent: True
+        location: '/opt/data/'
+
   - id: "cdu02"
-    image: pkarkazis/tng-stats-collector:latest
+    image: sonatanfv/tng-stats-collector:dev
     parameters:
       env:
         VNF_STATS_URL: http://localhost:5000/stats
         PW_URL: pushgateway.sonata.svc.cluster.local:9091
-        INTERVAL: 2
+        INTERVAL: 10
 
 # VNF connection points to the outside world
 connection_points:
-  - id: "rtmp"
+  - id: "hls"
     interface: "ipv4"
     type: "serviceendpoint"
-    port: 1935
+    port: 80
   - id: "api"
     interface: "ipv4"
     type: "serviceendpoint"
@@ -36,11 +41,11 @@ connection_points:
 
 # CNFs only use E-Tree links to map external ports to internal ports
 virtual_links:
-  - id: "rtmp-link"
+  - id: "hls-link"
     connectivity_type: "E-Tree"
     connection_points_reference:
-      - "rtmp"
-      - "cdu01:int-rtmp"
+      - "hls"
+      - "cdu01:int-hls"
   - id: "api-link"
     connectivity_type: "E-Tree"
     connection_points_reference:

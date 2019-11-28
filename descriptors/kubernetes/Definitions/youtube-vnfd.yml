@@ -3,7 +3,7 @@ descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/mast
 
 vendor: "eu.5gtango"
 name: "vnf-youtube"
-version: "0.5"
+version: "0.9"
 author: "Robert Muller"
 description: "Youtube VNF descriptor."
 
@@ -14,7 +14,7 @@ cloudnative_deployment_units:
       - id: "int-youtube"
         port: 50005
   - id: "cdu02"
-    image: pkarkazis/tng-stats-collector:latest
+    image: sonatanfv/tng-stats-collector:dev
     parameters:
       env:
         VNF_STATS_URL: http://localhost:50010/status
