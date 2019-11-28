@@ -1,11 +1,10 @@
 {
-"aggregators":
-[
-{
-"name": "aggregatorname",
-"location": "aveiro",
-"ip": "192.168.1.254"
-}
-],
-"streamingengines":[""]
+  "aggregators": [
+    {
+      "name": "aggregatorname",
+      "location": "aveiro",
+      "ip": "192.168.1.254"
+    }
+  ],
+  "streamingengines": [""]
 }

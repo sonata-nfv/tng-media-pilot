@@ -69,7 +69,9 @@ def register_camera():
 
     update_nginx(data)
 
-    ma_ip = os.getenv(get_ma_ip())
+    ma_ip = get_ma_ip()
+
+    logging.info('ma_ip: {}'.format(ma_ip))
 
     response = {}
     response["endpoint"] = "rtmp://{ma_ip}:1935/{camera_name}/{camera_name}".format(ma_ip=ma_ip, camera_name=camera_name)
@@ -94,17 +96,26 @@ def get_stream():
 
     for camera in data['cameras']:
         if camera['name'] == stream_app:
-            camera['streamingEngines'].append(streaming_engine_IP)
+            available = True
+            if streaming_engine_IP not in camera['streamingEngines']:
+                camera['streamingEngines'].append(streaming_engine_IP)
+        else:
+            available = False
 
-    logging.info('Cameras updated: {}'.format(data))
+    if available:
+        logging.info('Cameras updated: {}'.format(data))
 
-    with open("conf.json", "w") as conf_json:
-        json.dump(data, conf_json)
+        with open("conf.json", "w") as conf_json:
+            json.dump(data, conf_json)
 
-    update_nginx(data)
+        update_nginx(data)
 
-    response = {}
-    response["url"] = 'http://{streaming_engine_IP}:80/hls/{stream_app}.m3u8'.format(streaming_engine_IP=streaming_engine_IP, stream_app=stream_app)
+        response = {}
+        response["url"] = 'http://{streaming_engine_IP}:80/hls/{stream_app}.m3u8'.format(streaming_engine_IP=streaming_engine_IP, stream_app=stream_app)
+    else:
+        logging.info('Cameras updated: {}'.format(data))
+        response = {}
+        response["error"] = 'The camera {} is not registered in this Media Aggregator.'.format(stream_app)
 
     return json.dumps(response, sort_keys=False)
 
@@ -163,12 +174,7 @@ def nginxStats():
     conn.close()
 
     data = data.decode("utf-8")
-
-    logging.info('Nginx metrics: {}'.format(data))
-
     dic = xmltodict.parse(data)
-
-    logging.info('Nginx metrics dic: {}'.format(dic))
 
     return dic
 
