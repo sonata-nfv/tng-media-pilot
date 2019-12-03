@@ -16,7 +16,7 @@ cloudnative_deployment_units:
       - id: "int-monitoring"
         port: 50010
   - id: "cdu02"
-    image: sonatanfv/tng-stats-collector:dev
+    image: sonatanfv/tng-stats-collector:test
     parameters:
       env:
         VNF_STATS_URL: http://localhost:50010/status
