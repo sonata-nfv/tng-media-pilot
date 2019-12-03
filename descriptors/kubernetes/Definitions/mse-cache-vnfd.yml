@@ -21,7 +21,7 @@ cloudnative_deployment_units:
         location: '/opt/data/'
 
   - id: "cdu02"
-    image: sonatanfv/tng-stats-collector:dev
+    image: sonatanfv/tng-stats-collector:test
     parameters:
       env:
         VNF_STATS_URL: http://localhost:5000/stats
