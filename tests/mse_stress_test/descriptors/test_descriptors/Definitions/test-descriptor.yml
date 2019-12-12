@@ -4,14 +4,12 @@ description: "MSE CPU stress test"
 descriptor_schema: https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml
 name: "test-immersive-media-stress-mse"
 vendor: "eu.5gtango.atos"
-version: '0.1'
+version: '0.2'
 
 service_platforms:
   - "SONATA"
 testing_category:
   - "benchmarking"
-testing_tags:
-  - "mse-stress-test"
 
 phases:
 - id: setup
@@ -23,15 +21,6 @@ phases:
     description: "Configuration"
     name: configuration
     probes:
-    - id: initiator
-      description: "A service initial configuration container"
-      image: "ignaciodomin/media-initiator:stress"
-      name: initiator
-      parameters:
-      - key: CAMERAS
-        value: '5' #This value is to configure the number of emulated cameras
-      - key: CMS
-        value: '$(vnf-cms/endpoints/id:floating_ip/address)'
     - id: parser
       description: "Parser"
       image: "ignaciodomin/media-parser:stress"
@@ -39,27 +28,17 @@ phases:
       parameters: []
     - id: cpe
       description: "Content Producer Emulator (CPE) To generate a RTMP flow"
-      image: "ignaciodomin/media-cpe:stress"
+      image: "ignaciodomin/media-cpe:2.0"
       name: cpe
       parameters:
       - key: AGGREGATOR
         value: '$(vnf-ma/endpoints/id:floating_ip/address)'
-      - key: STREAM
-        value: test
+      - key: STREAMINGENGINE
+        value: '$(vnf-mse-transcode/endpoints/id:floating_ip/address)'
       - key: VIDEO
-        value: 'h264_360_3M_judo.mkv'
+        value: '360_7M.mp4'
 - id: exercise
   steps:
-  - command: /bin/sh
-    dependencies: []
-    description: "Starting the initiator"
-    entrypoint: /app/entrypoint.sh
-    index: 1
-    instances: 1
-    name: initiator
-    output:
-    - {results: logs.txt}
-    run: initiator
   - command: /bin/sh
     description: "Starting the CPE that simulates the camera"
     entrypoint: /app/entrypoint.sh
@@ -70,9 +49,8 @@ phases:
     - {results: logs.txt}
     run: cpe
     start_delay: 5
-    dependencies: [initiator]
   - command: /bin/sh
-    dependencies: [initiator, cpe]
+    dependencies: [cpe]
     description: "Parse the results"
     entrypoint: /app/entrypoint.sh
     index: 1
@@ -81,7 +59,7 @@ phases:
     output:
     - {results: result.json}
     run: parser
-    start_delay: 30
+    start_delay: 5
 - id: verification
   steps:
   - step: parser
@@ -90,8 +68,8 @@ phases:
     conditions:
     - condition: "="
       file: result.json
-      find: segments
-      name: segments
+      find: completed
+      name: completed
       type: json
-      value: 'correct'
+      value: 'ok'
 verdict: pass
