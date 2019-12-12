@@ -19,12 +19,10 @@ fi
 # Otherwise it loops forever, waking up every 60 seconds
 
 while sleep 1; do
-    ps aux | grep parser | grep -q -v grep
+    ps aux | grep cpe | grep -q -v grep
     PROCESS_1_STATUS=$?
-    if [ $PROCESS_1_STATUS -ne 1 ]; then
-        if [ $PROCESS_1_STATUS -ne 0 ]; then
-            echo "One of the processes has already exited. ${PROCESS_1_STATUS}"
-            exit 0
-        fi
+    if [ $PROCESS_1_STATUS -ne 0 ]; then
+        echo "One of the processes has already exited. ${PROCESS_1_STATUS}"
+        exit 0
     fi
 done

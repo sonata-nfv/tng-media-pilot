@@ -1,10 +1,15 @@
-FROM python:3.6-alpineh264_360_3M_judo.mkv
+FROM python:3.6-alpine
 
 RUN apk add --update \
+    openssl-dev \
+    libffi-dev \
+    alpine-sdk \
     py-pip\
     && rm -rf /var/cache/apk/*
 
-RUN pip install docker-compose
+RUN pip3 install --upgrade \
+    setuptools \
+    docker-compose
 
 ADD . /app/
 

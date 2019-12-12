@@ -60,7 +60,9 @@ if __name__ == '__main__':
     mse = os.getenv('STREAMINGENGINE')
     video = os.getenv('VIDEO')
 
-    while counter < 5:
+    processes = []
+
+    while counter < 6:
         stream = 'test{}'.format(counter)
         
         #Register the camera in the CMS:
@@ -101,18 +103,22 @@ if __name__ == '__main__':
         logging.info('Executing script {}'.format(counter)) 
         time.sleep(2)
         ffmpeg_process = threading.Thread(target=send_video, args=[video, aggregator, stream])
+        processes.append(ffmpeg_process)
         ffmpeg_process.start()
         logging.info('FFMPEG process {} started'.format(counter))
         #subprocess.Popen(['/app/send-video.sh', video, aggregator, stream])
 
-        logging.info('Waiting 2 minutes... {}'.format(counter))
+        logging.info('Waiting 2 minutes...')
         #Sleep 2 minutes: 
         counter = counter + 1
-        time.sleep(10)
+        time.sleep(600)
 
     logging.info('All the FFMPEG process were executed')
 
-    if counter is 5:
+    for process in processes:
+        process._stop()
+
+    if counter is 6:
         logs['completed'] = 'ok'
     else: 
         logs['completed'] = 'fail'
@@ -120,4 +126,4 @@ if __name__ == '__main__':
     with open('logs.txt', 'w') as fp:
         json.dump(logs, fp)
 
-    exit(0)
+    exit(2)
