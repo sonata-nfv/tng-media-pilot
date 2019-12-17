@@ -1,0 +1,109 @@
+{
+  "name": "media-slice",
+  "description": "Network Slice Descriptor for the media pilot, VMs use case.",
+  "version": "2.0",
+  "author": "Pol Alemany @: CTTC, Ignacio Dominguez @: Atos",
+  "vendor": "eu.5GTango",
+  "SNSSAI_identifier": {
+    "slice-service-type": "eMBB"
+  },
+  "usageState": "NOT_IN_USE",
+  "slice_ns_subnets": [
+    {
+      "id": "cms-ns",
+      "nsd-name": "cms-nsd",
+      "nsd-vendor": "eu.sonata-nfv",
+      "nsd-version": "0.2",
+      "is-shared": true
+    },
+    {
+      "id": "ma-ns",
+      "nsd-name": "ma-nsd",
+      "nsd-vendor": "eu.sonata-nfv",
+      "nsd-version": "0.2",
+      "is-shared": false
+    },
+    {
+      "id": "mse-transcode-ns",
+      "nsd-name": "mse-transcode-nsd",
+      "nsd-vendor": "eu.sonata-nfv",
+      "nsd-version": "0.2",
+      "is-shared": false
+    },
+    {
+      "id": "mse-cache-ns",
+      "nsd-name": "mse-cache-nsd",
+      "nsd-vendor": "eu.sonata-nfv",
+      "nsd-version": "0.2",
+      "is-shared": false
+    }
+  ],
+  "slice_vld": [
+    {
+      "id": "ma-cms-mse-api",
+      "name": "ma_cms_mse_api",
+      "mgmt-network": true,
+      "type": "E-LAN",
+      "access_net": false,
+      "nsd-connection-point-ref": [
+        {
+          "subnet-ref": "cms-ns",
+          "nsd-cp-ref": "cms-internal"
+        },
+        {
+          "subnet-ref": "ma-ns",
+          "nsd-cp-ref": "ma-api"
+        },
+        {
+          "subnet-ref": "mse-transcode-ns",
+          "nsd-cp-ref": "mse-transcode-api"
+        },
+        {
+          "subnet-ref": "mse-cache-ns",
+          "nsd-cp-ref": "mse-cache-api"
+        }
+      ]
+    },
+    {
+      "id": "ma-mse-rtmp",
+      "name": "ma_mse_rtmp",
+      "type": "E-LAN",
+      "access_net": false,
+      "nsd-connection-point-ref": [
+        {
+          "subnet-ref": "ma-ns",
+          "nsd-cp-ref": "ma-rtmp"
+        },
+        {
+          "subnet-ref": "mse-transcode-nsd",
+          "nsd-cp-ref": "mse-transcode-rtmp"
+        }
+      ]
+    },
+    {
+      "id": "mse-hls",
+      "name": "mse_hls",
+      "type": "E-LAN",
+      "access_net": true,
+      "nsd-connection-point-ref": [
+        {
+          "subnet-ref": "mse-cache-ns",
+          "nsd-cp-ref": "mse-cache-hls"
+        }
+      ]
+    },
+    {
+      "id": "cms-external",
+      "name": "cms_external",
+      "mgmt-network": true,
+      "type": "E-LAN",
+      "access_net": true,
+      "nsd-connection-point-ref": [
+        {
+          "subnet-ref": "cms-ns",
+          "nsd-cp-ref": "cms-external"
+        }
+      ]
+    }
+  ]
+}

@@ -51,14 +51,19 @@ def parseLogs(path):
 
     result = {}
 
-    if data['variants']['0']['targetduration'] == data['variants']['1']['targetduration']:
-        value = data['variants']['0']['targetduration']
-        if all(value for value in data['variants']['0']['segments']) and all(value for value in data['variants']['1']['segments']):
-            result['segments'] = 'correct'
-        else:
-            result['segments'] = 'incorrect'
+    # if data['variants']['0']['targetduration'] == data['variants']['1']['targetduration']:
+    #     value = data['variants']['0']['targetduration']
+    #     if all(value for value in data['variants']['0']['segments']) and all(value for value in data['variants']['1']['segments']):
+    #         result['segments'] = 'correct'
+    #     else:
+    #         result['segments'] = 'incorrect'
+    # else:
+    #     result['segments'] = 'incorrect'
+
+    if data['completed'] is 'ok':
+        result['completed'] = 'ok'
     else:
-        result['segments'] = 'incorrect'
+        result['completed'] = 'fail'
 
     return result
 

@@ -1,0 +1,4 @@
+flask
+flask_restful
+xmltodict==0.11.0
+requests

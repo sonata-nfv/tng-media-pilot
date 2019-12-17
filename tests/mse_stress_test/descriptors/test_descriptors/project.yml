@@ -4,14 +4,14 @@ version: '0.5'
 package:
   vendor: "eu.5gtango"
   name: "media-mse-stress-test"
-  version: "0.1"
+  version: "0.2"
   maintainer: "Ignacio Dominguez, ATOS"
   description: "This is a 5GTANGO test package to stress the MSE and check the CPU load"
 files:
   - path: "Definitions/test-descriptor.yml"
     type: "application/vnd.5gtango.tstd"
     testing_tags:
-      - "mse-stress-test"
+      - "stress"
   - path: "Icons/atos_logo.png"
     type: "image/png"
   - path: "Licenses/LICENSE"

@@ -34,7 +34,7 @@
 
 from flask import Flask, request, json, render_template
 
-import http.client, xmltodict, os, uuid
+import http.client, xmltodict, os, uuid, logging, requests
 
 CONF_PATH = '/opt/nginx/nginx.conf'
 
@@ -46,11 +46,15 @@ app = Flask(__name__)
 def register_camera():
     input_json = request.get_json()
 
+    logging.info('Request from CMS: {}'.format(input_json))
+
     camera_name = input_json['name']
     camera_type = input_json['type']
 
     with open("conf.json") as conf_json:
         data = json.load(conf_json)
+
+    logging.info('Available cameras: {}'.format(data))
 
     data["cameras"].append({
         "name": camera_name,
@@ -58,15 +62,19 @@ def register_camera():
         "streamingEngines": []
     })
 
+    logging.info('Cameras updated: {}'.format(data))
+
     with open("conf.json", "w") as conf_json:
         json.dump(data, conf_json)
 
     update_nginx(data)
 
-    ma_ip = os.getenv(get_ma_ip())
+    ma_ip = get_ma_ip()
+
+    logging.info('ma_ip: {}'.format(ma_ip))
 
     response = {}
-    response["endpoint"] = "rtmp://" + ma_ip + ":1935/" + camera_name + "/" + camera_name
+    response["endpoint"] = "rtmp://{ma_ip}:1935/{camera_name}/{camera_name}".format(ma_ip=ma_ip, camera_name=camera_name)
 
     return json.dumps(response, sort_keys=False)
 
@@ -75,25 +83,39 @@ def register_camera():
 def get_stream():
     input_json = request.get_json()
 
+    logging.info('Request from CMS: {}'.format(input_json))
+
     stream_app = input_json["name"]
     streaming_engine_IP = input_json["se_ip"]
-    print(streaming_engine_IP)
     streaming_engine_IP = streaming_engine_IP.split(':')[0]
 
     with open("conf.json") as conf_json:
         data = json.load(conf_json)
 
+    logging.info('Available cameras: {}'.format(data))
+
     for camera in data['cameras']:
         if camera['name'] == stream_app:
-            camera['streamingEngines'].append(streaming_engine_IP)
+            available = True
+            if streaming_engine_IP not in camera['streamingEngines']:
+                camera['streamingEngines'].append(streaming_engine_IP)
+        else:
+            available = False
 
-    with open("conf.json", "w") as conf_json:
-        json.dump(data, conf_json)
+    if available:
+        logging.info('Cameras updated: {}'.format(data))
 
-    update_nginx(data)
+        with open("conf.json", "w") as conf_json:
+            json.dump(data, conf_json)
 
-    response = {}
-    response["url"] = "http://"+streaming_engine_IP+":80/hls/"+stream_app+".m3u8"
+        update_nginx(data)
+
+        response = {}
+        response["url"] = 'http://{streaming_engine_IP}:80/hls/{stream_app}.m3u8'.format(streaming_engine_IP=streaming_engine_IP, stream_app=stream_app)
+    else:
+        logging.info('Cameras updated: {}'.format(data))
+        response = {}
+        response["error"] = 'The camera {} is not registered in this Media Aggregator.'.format(stream_app)
 
     return json.dumps(response, sort_keys=False)
 
@@ -115,14 +137,18 @@ def stats():
 
     o_dic["input_conn"] = input_conn
 
+    logging.info('Bandwidth: {bw_in}/{bw_out} in/out. Input connections: {input_conn}'.format(bw_in=o_dic["bw_in"], bw_out=o_dic["bw_out"], input_conn=o_dic["input_conn"]))
+
     return json.dumps(o_dic, sort_keys=False)
 
 """This function checks the availability of the VNF"""
-@app.route("/status", methods=["GET"])
+@app.route("/Status", methods=["GET"])
 def status():
     dic = nginxStats()
 
     uptime = dic['rtmp']['uptime']
+
+    logging.info('Nginx uptime: {}'.format(uptime))
 
     if int(uptime) > 0:
         status = "ok"
@@ -148,7 +174,6 @@ def nginxStats():
     conn.close()
 
     data = data.decode("utf-8")
-
     dic = xmltodict.parse(data)
 
     return dic
@@ -165,9 +190,48 @@ def get_ma_ip():
     vendor = os.getenv('vendor')
     version = os.getenv('version')
 
-    ma_ip = name + '_' + vendor + '_' + version + '_rtmp_ip'
+    ma_ip = os.getenv('{name}_{vendor}_{version}_rtmp_ip'.format(name=name, vendor=vendor, version=version))
 
     return ma_ip
 
+def register():
+    with app.app_context():
+        name = os.getenv('HOSTNAME')
+        location = os.getenv('event') 
+        ip = get_ma_ip()
+
+        conf = {}
+        conf['Aggregators'] = []
+        conf['Aggregators'].append({'name': name, 'location': location, 'ip': ip})
+        conf['StreamingEngines'] = []
+
+        try:
+            api_endpoint = 'http://{}:50000/configure'.format(os.getenv('CMS_IP'))
+        except:
+            logging.error('CMS_IP env variable not found')
+
+        body = json.dumps(conf, sort_keys=False)
+        logging.info('Body: {}'.format(body))
+
+        try:
+            r = requests.post(url=api_endpoint, data=body, headers={'Content-type': 'application/json'})
+        except requests.exceptions.RequestException as e:
+            logging.error('{}'.format(e))
+
+        logging.info('{status}, {reason}'.format(status=r.status_code, reason=r.reason))
+
+        return status
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+
+    status = 200
+
+    if "CMS_IP" in os.environ:
+       status = register()
+
+    if status is 200:
+        app.run(host='0.0.0.0', debug=True)
+    else:
+        logging.info('Media Aggregator not registered, {} response from the CMS'.format(status))

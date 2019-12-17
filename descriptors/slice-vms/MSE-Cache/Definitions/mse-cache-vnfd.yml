@@ -1,0 +1,39 @@
+---
+descriptor_schema: "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/function-descriptor/vnfd-schema.yml"
+
+vendor: "eu.5gtango"
+name: "vnf-mse-cache"
+version: "0.1"
+author: "Ignacio Dominguez (ATOS)"
+description: "Media-mse-cache VNF descriptor."
+
+virtual_deployment_units:
+  - id: "vdu01"
+    vm_image: "http://www.google.es"
+    vm_image_format: "qcow2"
+    vm_image_md5: '061a81205360b52464f780178cc36303'
+    resource_requirements:
+      cpu:
+        vcpus: 2
+      memory:
+        size: 4
+        size_unit: "GB"
+      storage:
+        size: 80
+        size_unit: "GB"
+    connection_points:
+      - id: "external"
+        interface: "ipv4"
+        type: "external"
+
+connection_points:
+  - id: "cpexternal"
+    interface: "ipv4"
+    type: "external"
+
+virtual_links:
+  - id: "vlexternal"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vdu01:external"
+      - "cpexternal"
