@@ -36,6 +36,7 @@ from flask import Flask, json
 import os, logging, requests
 from flask.json import jsonify
 import json
+import time
 
 app = Flask(__name__)
 
@@ -68,39 +69,41 @@ def get_mse_ip():
 def register():
     with app.app_context():
         name = os.getenv('HOSTNAME')
-        location = os.getenv('event') 
-        ip = get_mse_ip()
+        if "event" in os.environ:
+            location = os.getenv('event') 
+        else:
+            location = "Madrid"
+        ip = '{}:5000'.format(get_mse_ip())
 
         conf = {}
         conf['StreamingEngines'] = []
         conf['StreamingEngines'].append({'name': name, 'location': location, 'ip': ip})
         conf['Aggregators'] = []
 
-        try:
+        if "CMS_IP" in os.environ:
             api_endpoint = 'http://{}:50000/configure'.format(os.getenv('CMS_IP'))
-        except:
-            logging.error('CMS_IP env variable not found')
+        else: 
+            cms_ip = os.getenv("vnf_cms_eu_5gtango_0_9_api_ip")
+            api_endpoint = 'http://{}:50000/configure'.format(cms_ip)
 
         body = json.dumps(conf, sort_keys=False)
         logging.info('Body: {}'.format(body))
 
         try:
+            time.sleep(60)
             r = requests.post(url=api_endpoint, data=body, headers={'Content-type': 'application/json'})
         except requests.exceptions.RequestException as e:
             logging.error('{}'.format(e))
 
         logging.info('{status}, {reason}'.format(status=r.status_code, reason=r.reason))
 
-        return status
+        return r.status_code
 
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
-    status = 200
-
-    if "CMS_IP" in os.environ:
-       status = register()
+    status = register()
 
     if status is 200:
         app.run(host='0.0.0.0', debug=True)
