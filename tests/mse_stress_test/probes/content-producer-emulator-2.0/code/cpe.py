@@ -37,9 +37,12 @@ import logging
 import os
 import threading
 import time
+import sys
 
 import requests
 
+#INTERVAL = 30 #The probe creates a camera each 30 seconds
+#CAMERAS = 6
 
 def send_video(video, aggregator, stream):
     try:
@@ -59,10 +62,12 @@ if __name__ == '__main__':
     aggregator = os.getenv('AGGREGATOR')
     mse = os.getenv('STREAMINGENGINE')
     video = os.getenv('VIDEO')
+    cameras = int(os.getenv('CAMERAS'))
+    interval = int(os.getenv('INTERVAL'))
 
     processes = []
 
-    while counter < 6:
+    while counter < cameras:
         stream = 'test{}'.format(counter)
         
         #Register the camera in the CMS:
@@ -76,11 +81,11 @@ if __name__ == '__main__':
         logging.info('Body: {}'.format(body))
 
         try:
+            logging.info('api_endpoint: {}'.format(api_endpoint))
             r = requests.post(url=api_endpoint, data=body, headers={'Content-type': 'application/json'})
+            logging.info('{}, {}'.format(r.status_code, r.reason))
         except requests.exceptions.RequestException as e:
             logging.error('{}'.format(e))
-
-        logging.info('{}, {}'.format(r.status_code, r.reason))
 
         #Connect the MA with the MSE:
         api_endpoint = 'http://{}:5000/getStream'.format(aggregator)
@@ -94,36 +99,39 @@ if __name__ == '__main__':
 
         try:
             r = requests.get(url=api_endpoint, data=body, headers={'Content-type': 'application/json'})
+            logging.info('{}, {}'.format(r.status_code, r.reason))
         except requests.exceptions.RequestException as e:
             logging.error('{}'.format(e))
-
-        logging.info('{}, {}'.format(r.status_code, r.reason))
 
         #Start the FFmpeg script:
         logging.info('Executing script {}'.format(counter)) 
         time.sleep(2)
         ffmpeg_process = threading.Thread(target=send_video, args=[video, aggregator, stream])
         processes.append(ffmpeg_process)
+        ffmpeg_process.setDaemon(True)
         ffmpeg_process.start()
         logging.info('FFMPEG process {} started'.format(counter))
-        #subprocess.Popen(['/app/send-video.sh', video, aggregator, stream])
 
-        logging.info('Waiting 2 minutes...')
-        #Sleep 2 minutes: 
+        logging.info('Waiting {} seconds...'.format(interval))
         counter = counter + 1
-        time.sleep(600)
+        time.sleep(interval)
 
     logging.info('All the FFMPEG process were executed')
 
-    for process in processes:
-        process._stop()
+    # for process in processes:
+    #     process.stop()
 
-    if counter is 6:
+    if counter is cameras:
         logs['completed'] = 'ok'
     else: 
         logs['completed'] = 'fail'
 
-    with open('logs.txt', 'w') as fp:
-        json.dump(logs, fp)
+    logging.info('Test result: {}'.format(logs))
 
-    exit(2)
+    try:
+        with open('/output/cpe/{}/results.json'.format(os.getenv('HOSTNAME')), 'w') as fp:
+            json.dump(logs, fp)
+    except IOError as e:
+        logging.error(e)
+
+    sys.exit(0)

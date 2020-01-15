@@ -16,7 +16,7 @@ COPY code/requirements.txt /app
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
-COPY video/360_7M.mp4 /app/video
+COPY video/360_7M.mp4 /app/video/360_7M.mp4
 COPY code /app 
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
