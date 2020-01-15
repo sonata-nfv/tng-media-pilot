@@ -10,6 +10,8 @@ service_platforms:
   - "SONATA"
 testing_category:
   - "benchmarking"
+testing_tags:
+  - "stress"
 
 phases:
 - id: setup
@@ -21,11 +23,6 @@ phases:
     description: "Configuration"
     name: configuration
     probes:
-    - id: parser
-      description: "Parser"
-      image: "ignaciodomin/media-parser:stress"
-      name: parser
-      parameters: []
     - id: cpe
       description: "Content Producer Emulator (CPE) To generate a RTMP flow"
       image: "ignaciodomin/media-cpe:2.0"
@@ -37,6 +34,10 @@ phases:
         value: '$(vnf-mse-transcode/endpoints/id:floating_ip/address)'
       - key: VIDEO
         value: '360_7M.mp4'
+      - key: CAMERAS
+        value: '6'
+      - key: INTERVAL
+        value: '30'
 - id: exercise
   steps:
   - command: /bin/sh
@@ -48,26 +49,15 @@ phases:
     output:
     - {results: logs.txt}
     run: cpe
-    start_delay: 5
-  - command: /bin/sh
-    dependencies: [cpe]
-    description: "Parse the results"
-    entrypoint: /app/entrypoint.sh
-    index: 1
-    instances: 1
-    name: parser
-    output:
-    - {results: result.json}
-    run: parser
-    start_delay: 5
+    start_delay: 120
 - id: verification
   steps:
-  - step: parser
+  - step: cpe
     description: "Check obtained results"
-    name: parser
+    name: cpe
     conditions:
     - condition: "="
-      file: result.json
+      file: results.json
       find: completed
       name: completed
       type: json

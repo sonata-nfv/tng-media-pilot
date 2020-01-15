@@ -32,7 +32,7 @@
 ## acknowledge the contributions of their colleagues of the 5GTANGO
 ## partner consortium (www.5gtango.eu).
 
-import json, sys, os
+import json, sys, os, time
 
 # def read_variants(masterPlaylistPath):
 #     with open(masterPlaylistPath) as masterPlaylist:
@@ -70,16 +70,18 @@ def parseLogs(path):
 if __name__ == '__main__':
 
     rootdir = '/output'
-    writePath = '/output/parser' + os.getenv("HOSTNAME")
-    logs = 'logs.txt'
 
-    for subdir, dirs, files in os.walk(rootdir):
-        for file in files:
-            if file == 'logs.txt':
-                path = os.path.join(rootdir, file)
-                result = parseLogs(path)
+    while True: 
+        for subdir, dirs, files in os.walk(rootdir):
+            for file in files:
+                if file == 'logs.txt':
+                    path = os.path.join(rootdir, file)
+                    result = parseLogs(path)
+                else:
+                    time.sleep(5)
+                    break
 
-    writePath = '/output/parser/' + os.getenv("HOSTNAME") + '/result.json'
+    writePath = '/output/parser/' + os.getenv("HOSTNAME") + '/results.json'
 
     with open(writePath, 'w') as outfile:
         json.dump(result, outfile)
