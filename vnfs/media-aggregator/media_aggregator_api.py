@@ -32,14 +32,18 @@
 ## acknowledge the contributions of their colleagues of the 5GTANGO
 ## partner consortium (www.5gtango.eu).
 
-from flask import Flask, request, json, render_template
+import http.client
+import logging
+import os
+import time
 
-import http.client, xmltodict, os, uuid, logging, requests, time
+import requests
+import xmltodict
+from flask import Flask, json, render_template, request
 
 CONF_PATH = '/opt/nginx/nginx.conf'
 
 app = Flask(__name__)
-
 
 """This function creates an app in the nginx.conf for the new camera"""
 @app.route("/registerCamera", methods=["POST"])
@@ -89,6 +93,12 @@ def get_stream():
     streaming_engine_IP = input_json["se_ip"]
     streaming_engine_IP = streaming_engine_IP.split(':')[0]
 
+    #Quick fix:
+    vnf_name ='vnf_mse_transcode_eu_5gtango_'
+    vnf_version = os.getenv('version')
+    vnf_cp = '_api_ip'
+    streaming_engine_t_IP = os.getenv('{}{}{}'.format(vnf_name,vnf_version,vnf_cp)) 
+
     with open("conf.json") as conf_json:
         data = json.load(conf_json)
 
@@ -96,26 +106,26 @@ def get_stream():
 
     for camera in data['cameras']:
         if camera['name'] == stream_app:
-            available = True
-            if streaming_engine_IP not in camera['streamingEngines']:
-                camera['streamingEngines'].append(streaming_engine_IP)
-        else:
-            available = False
+            #available = True
+            if streaming_engine_t_IP not in camera['streamingEngines']:
+                camera['streamingEngines'].append(streaming_engine_t_IP)
 
-    if available:
-        logging.info('Cameras updated: {}'.format(data))
+    #logging.info('Camera available: {}'.format(available))
 
-        with open("conf.json", "w") as conf_json:
-            json.dump(data, conf_json)
+    #if available:
+    #    logging.info('Cameras updated: {}'.format(data))
+
+    with open("conf.json", "w") as conf_json:
+        json.dump(data, conf_json)
 
         update_nginx(data)
 
         response = {}
-        response["url"] = 'http://{streaming_engine_IP}:80/hls/{stream_app}.m3u8'.format(streaming_engine_IP=streaming_engine_IP, stream_app=stream_app)
-    else:
-        logging.info('Cameras updated: {}'.format(data))
-        response = {}
-        response["error"] = 'The camera {} is not registered in this Media Aggregator.'.format(stream_app)
+        response["url"] = 'http://{}:80/hls/{}.m3u8'.format(streaming_engine_IP,stream_app)
+    #else:
+    #    logging.info('Cameras not updated: {}'.format(data))
+    #    response = {}
+    #    response["error"] = 'The camera {} is not registered in this Media Aggregator.'.format(stream_app)
 
     return json.dumps(response, sort_keys=False)
 
@@ -137,7 +147,7 @@ def stats():
 
     o_dic["input_conn"] = input_conn
 
-    logging.info('Bandwidth: {bw_in}/{bw_out} in/out. Input connections: {input_conn}'.format(bw_in=o_dic["bw_in"], bw_out=o_dic["bw_out"], input_conn=o_dic["input_conn"]))
+    #logging.info('Bandwidth: {bw_in}/{bw_out} in/out. Input connections: {input_conn}'.format(bw_in=o_dic["bw_in"], bw_out=o_dic["bw_out"], input_conn=o_dic["input_conn"]))
 
     return json.dumps(o_dic, sort_keys=False)
 
@@ -148,7 +158,7 @@ def status():
 
     uptime = dic['rtmp']['uptime']
 
-    logging.info('Nginx uptime: {}'.format(uptime))
+    #logging.info('Nginx uptime: {}'.format(uptime))
 
     if int(uptime) > 0:
         status = "ok"
@@ -200,7 +210,7 @@ def register():
         if "event" in os.environ:
             location = os.getenv('event') 
         else:
-            location = "Madrid"
+            location = "Brussels"
         ip = '{}:5000'.format(get_ma_ip())
 
         conf = {}
@@ -210,8 +220,8 @@ def register():
 
         if "CMS_IP" in os.environ:
             api_endpoint = 'http://{}:50000/configure'.format(os.getenv('CMS_IP'))
-        else: 
-            cms_ip = os.getenv("vnf_cms_eu_5gtango_0_9_api_ip")
+        else:
+            cms_ip = os.getenv("vnf_cms_eu_5gtango_{}_api_ip".format(os.getenv("version")))
             api_endpoint = 'http://{}:50000/configure'.format(cms_ip)
 
         body = json.dumps(conf, sort_keys=False)
@@ -220,12 +230,10 @@ def register():
         try:
             time.sleep(60)
             r = requests.post(url=api_endpoint, data=body, headers={'Content-type': 'application/json'})
+            return r.status_code
         except requests.exceptions.RequestException as e:
             logging.error('{}'.format(e))
-
-        logging.info('{status}, {reason}'.format(status=r.status_code, reason=r.reason))
-
-        return r.status_code
+            return e
 
 
 if __name__ == '__main__':
