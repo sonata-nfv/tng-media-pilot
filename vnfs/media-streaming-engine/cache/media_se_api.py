@@ -72,7 +72,7 @@ def register():
         if "event" in os.environ:
             location = os.getenv('event') 
         else:
-            location = "Madrid"
+            location = "Brussels"
         ip = '{}:5000'.format(get_mse_ip())
 
         conf = {}
@@ -83,7 +83,7 @@ def register():
         if "CMS_IP" in os.environ:
             api_endpoint = 'http://{}:50000/configure'.format(os.getenv('CMS_IP'))
         else: 
-            cms_ip = os.getenv("vnf_cms_eu_5gtango_0_9_api_ip")
+            cms_ip = os.getenv("vnf_cms_eu_5gtango_{}_api_ip".format(os.getenv("version")))
             api_endpoint = 'http://{}:50000/configure'.format(cms_ip)
 
         body = json.dumps(conf, sort_keys=False)
@@ -92,12 +92,10 @@ def register():
         try:
             time.sleep(60)
             r = requests.post(url=api_endpoint, data=body, headers={'Content-type': 'application/json'})
+            return r.status_code
         except requests.exceptions.RequestException as e:
             logging.error('{}'.format(e))
-
-        logging.info('{status}, {reason}'.format(status=r.status_code, reason=r.reason))
-
-        return r.status_code
+            return e
 
 
 if __name__ == '__main__':
