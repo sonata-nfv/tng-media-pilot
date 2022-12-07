@@ -4,7 +4,7 @@
   "description": "twittervnf",
   "main": "twitterVNF.js",
   "dependencies": {
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "express-stream": "^0.8.0",
     "oauth": "^0.9.15",
     "opener": "^1.4.3",
